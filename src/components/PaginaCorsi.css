@@ -2,3 +2,48 @@
     width: 100px;
     height: auto;
 }
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.header-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.mobile-menu-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.mobile-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.mobile-menu-content {
+    padding: 16px;
+}
+
+.menu-section {
+    margin-bottom: 12px;
+}
+
+.menu-item {
+    margin-bottom: 8px;
+}
+
+.subtext {
+    font-size: 0.875rem;
+    color: #6c757d;
+}

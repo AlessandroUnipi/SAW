@@ -35,17 +35,12 @@ const Header = () => {
 
       {/* Menu mobile dropdown */}
       {isMenuOpen && (
-        <div className="mobile-menu">
-          <div className="mobile-menu-content">
-            <div className="menu-section">
-              <h3>Menu</h3>
-              <div className="menu-item">
-                <div>Maria</div>
-                <div className="subtext">Battista: corrispettiva, grazie a chiavi</div>
-              </div>
-            </div>
+          <div className="menu-popup">
+            <button className="menu-button-item">Home</button>
+            <button className="menu-button-item">Corsi</button>
+            <button className="menu-button-item">Chi siamo</button>
+            <button className="menu-button-item">Altro</button>
           </div>
-        </div>
       )}
     </header>
   );
