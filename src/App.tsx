@@ -9,13 +9,11 @@ function App() {
   //const [count, setCount] = useState(0)
 
   return (
-    <div>
-      <HomePage />
-      <main className="pt-16">
-        <h1 className="text-3xl font-bold text-center mt-8">Benvenuto su SAW</h1>
-      </main>
-    </div>
+    <HomePage />
+      
+    
   );
 }
 
 export default App
+ 

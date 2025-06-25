@@ -17,8 +17,8 @@ const Header = () => {
 
         {/* Pulsanti */}
         <div className="header-buttons">
-          <button className="text-button">Crea un account</button>
-          <button className="primary-button">Account personale →</button>
+          <button className="register-button">Crea un account</button>
+          <button className="login-button">Account personale →</button>
           
           {/* Menu mobile */}
           <button 
@@ -32,7 +32,7 @@ const Header = () => {
           </button>
         </div>
       </div>
-
+   
       {/* Menu mobile dropdown */}
       {isMenuOpen && (
           <div className="menu-popup">

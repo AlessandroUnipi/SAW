@@ -16,8 +16,7 @@
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    padding: 0 16px;
-    max-width: 1200px;
+    padding: 0 20px;
     margin: 0 auto;
   }
   
@@ -37,32 +36,23 @@
   .header-buttons {
     display: flex;
     gap: 16px;
-    align-items: center;
+    justify-content: flex-end;
+    align-items: flex-end;
+    
   }
   
-  .text-button {
+  .register-button {
     color: #333;
     font-size: 0.875rem;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 8px 0;
   }
   
-  .primary-button {
+  .login-button {
     background-color: #2563eb;
     color: white;
     padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .mobile-menu-button {
-    background-color: #2563eb;
-    color: white;
-    padding: 3px 8px;
     border-radius: 4px;
     font-size: 0.875rem;
     border: none;
@@ -86,8 +76,19 @@
     border-top: 1px solid #eee;
     z-index: 100;
     animation: slideInFromLeft 0.3s ease-out;
-    }
+  }
   
+    .mobile-menu-button {
+    background-color: #2563eb;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    border: black 1px solid;
+    cursor: pointer;  
+  }
+  
+
   .mobile-menu-content {
     display: flex;
     flex-direction: row;
@@ -96,12 +97,31 @@
   }
   
   .mobile-menu-item {
-      background: none;
+    background: none;
     border: none;
     font-size: 1rem;
     cursor: pointer;
     color: #333;
     padding: 10px 12px;
+  }
+  
+  .login-button:hover,
+  .mobile-menu-button:hover {
+    background-color: #1d4ed8; /* Colore più scuro al passaggio del mouse */
+    color: white;
+    border-radius: 4px;
+
+  }
+
+  .register-button:hover {
+    background-color: rgba(90, 86, 86, 0.932); /* Colore più scuro al passaggio del mouse */
+    color: white
+  }
+
+  .login-button,
+  .register-button{
+    padding: 8px 14px;
+    border: black 1px solid;
   }
   
   /* Responsive */
@@ -126,10 +146,10 @@
 
 .menu-popup {
   position: absolute;
-  top: 64px; /* subito sotto l'header */
-  right: 16px;
+  top: 66px; /* subito sotto l'header */
+  right: 5px;
   background-color: white;
-  padding: 12px;
+  padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   display: flex;
