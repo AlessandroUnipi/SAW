@@ -1,19 +1,35 @@
 // src/components/Header.tsx
-import { useState } from "react";
+import {useEffect, useRef, useState } from "react";
 import "./PaginaPrincipale.css"; // Stili CSS standard
 
-const Header = () => {
+const HomePage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [isAccount, setIsAccount] = useState(false);
 
+
+  const colorBoxRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const boxes = colorBoxRef.current?.querySelectorAll(".color-box");
+      boxes?.forEach((box) => {
+        box.addEventListener("mouseenter", () => {
+          (box as HTMLElement).style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+        });
+      });
+    }, []);
+
   return (
+  <>
+    {/* Header con logo, pulsanti e menu mobile */}
     <header className="header">
       <div className="header-container">
         {/* Logo/Titolo */}
         <div className="logo-container">
           <img src="/src/assets/Logo.jpeg" alt="Logo" className="logo" />
         </div>
+        
+        {/* Menu di navigazione */}
 
         {/* Pulsanti */}
         <div className="header-buttons">
@@ -43,7 +59,20 @@ const Header = () => {
           </div>
       )}
     </header>
+
+    {/* Body */}
+
+    <main className="main-content">
+      <h1>Benvenuto nella nostra piattaforma</h1>
+      <section ref={colorBoxRef} className="color-box-section">
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="color-box"></div>
+        ))}
+      </section>
+    </main>
+  </>
   );
 };
 
-export default Header;
+
+export default HomePage;

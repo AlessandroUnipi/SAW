@@ -31,7 +31,11 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100vh; /* bianco */
+  font-family: sans-serif;
+  color: #111827; /* testo principale */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fff;
 }
 
 h1 {

@@ -5,11 +5,13 @@ import './styles/App.css'
 import PaginaCorsi from './components/PaginaCorsi'
 import HomePage from './components/PaginaPrincipale'
 
+
 function App() {
   //const [count, setCount] = useState(0)
 
   return (
     <HomePage />
+    
       
     
   );
