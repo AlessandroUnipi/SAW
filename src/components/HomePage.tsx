@@ -1,6 +1,6 @@
 // src/components/Header.tsx
 import {useEffect, useRef, useState } from "react";
-import "./PaginaPrincipale.css"; // Stili CSS standard
+import "./HomePage.css"; // Stili CSS standard
 
 const HomePage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

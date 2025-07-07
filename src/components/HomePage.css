@@ -202,14 +202,15 @@
 }
 
 .main-content {
-  margin-top: 64px; /* uguale all'altezza dell'header per evitare sovrapposizioni */
-  min-height: calc(100vh - 64px); /* occuperà tutto lo schermo meno l'header */
+  margin-top: 64px; /* lascia spazio per l'header fisso */
+  min-height: calc(100vh - 64px);
+  width: 100%; /* aggiungi questa riga per occupare tutta la larghezza */
   padding: 40px 20px;
   text-align: center;
-  background-color: #fff;
+  background-color: #fff; /* o il colore che desideri per il body */
   display: flex;
   flex-direction: column;
-  justify-content: center; /* centra verticalmente il contenuto */
+  justify-content: center;
 }
 
 main h1 {
@@ -217,4 +218,5 @@ main h1 {
   color: #111827; /* colore scuro */
   margin-bottom: 20px;
   font-weight: 700;
+  height: 100px; /* altezza fissa per il titolo */
 }

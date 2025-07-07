@@ -3,7 +3,7 @@ import { useState } from 'react'
 // import viteLogo from '/vite.svg'
 import './styles/App.css'
 import PaginaCorsi from './components/PaginaCorsi'
-import HomePage from './components/PaginaPrincipale'
+import HomePage from './components/HomePage'
 
 
 function App() {
