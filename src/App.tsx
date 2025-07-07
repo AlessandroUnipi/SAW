@@ -1,21 +1,20 @@
-import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import './styles/App.css'
-import PaginaCorsi from './components/PaginaCorsi'
-import HomePage from './components/HomePage'
 
+import './styles/App.css'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import Calendario from './pages/Calendario';
+import Header from './components/Header';
 
 function App() {
-  //const [count, setCount] = useState(0)
-
   return (
-    <HomePage />
-    
-      
-    
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/calendario" element={<Calendario />} />
+      </Routes>
+    </Router>
   );
 }
 
-export default App
- 
+export default App;

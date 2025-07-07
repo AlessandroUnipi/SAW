@@ -1,0 +1,57 @@
+/* src/components/Header.css */
+
+.color-box-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.color-box {
+  width: 100px;
+  height: 100px;
+  margin: 5px;
+  background-color: #eee;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.main-content {
+  margin-top: 64px; /* lascia spazio per l'header fisso */
+  min-height: calc(100vh - 64px);
+  width: 100%; /* aggiungi questa riga per occupare tutta la larghezza */
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #fff; /* o il colore che desideri per il body */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+main h1 {
+  font-size: 2.5rem;
+  color: #111827; /* colore scuro */
+  margin-bottom: 20px;
+  margin-top: 0; /* rimuove il margine superiore */
+  font-weight: 700;
+  height: 100px; /* altezza fissa per il titolo */
+}
+
+.calendar-icon {
+  width: 70px; /* larghezza dell'icona */
+  height: auto; /* mantiene le proporzioni */
+  margin-top: 20px; /* spazio sopra l'icona */
+}
+
+.freccia-sx, .freccia-dx {
+  width: 50px; /* larghezza dell'icona */
+  height: 50px; /* altezza dell'icona */
+}
+
+.navigation-buttons {
+  display: flex;
+  gap: 20px; /* spazio tra i pulsanti */
+  align-items: center; /* allinea verticalmente i pulsanti */
+  justify-content: center;
+  flex-wrap: wrap;
+}

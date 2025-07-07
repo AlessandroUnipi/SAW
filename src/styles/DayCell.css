@@ -1,0 +1,17 @@
+.day-cell {
+  border: 1px solid #ccc;
+  width: 100px; /* adatta alla tua griglia */
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  transition: background-color 0.2s;
+  box-sizing: border-box;
+}
+
+.day-cell.today {
+  background-color: #2563eb; /* blu evidenziazione giorno corrente */
+  color: white;
+  font-weight: bold;
+}
