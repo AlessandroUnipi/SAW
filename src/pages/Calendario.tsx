@@ -1,20 +1,16 @@
 import { useState } from "react";
 import "../styles/Calendario.css"; // Stili CSS standard
-import DayCell from "../components/DayCell"; // Importa il componente DayCell
+import CalendarGrid from "../components/CalendarGrid";
 
 
-// import { Navigate } from "react-router-dom";
-
-const Calendario = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    return(
-        <>
-            <h1 className="calendario-title">Calendario</h1>
-            <h1>Sei dentro il Calendario</h1>
-      <DayCell date={new Date()} oggi={true} />
-        </>
-    )
-}
+const CalendarioPage = () => {
+  return (
+    <div className="calendario-page">
+      <h1>Il tuo Calendario</h1>
+      <CalendarGrid />
+    </div>
+  );
+};
 
 
-export default Calendario;
+export default CalendarioPage;

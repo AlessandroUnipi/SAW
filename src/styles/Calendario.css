@@ -1,7 +1,12 @@
-.calendario-title {
-  font-size: 2rem;
-  color: #111827;
+.calendario-page {
+  margin-top: 64px; /* spazio per header fisso */
+  padding: 20px;
+  background-color: #f9f9f9; /* colore di sfondo chiaro */
+  min-height: calc(100vh - 64px);
+}
+
+.calendario-page h1 {
+  text-align: center;
   margin-bottom: 20px;
-  margin-top: 0;
-  font-weight: 700;
+  color: #111827; /* stesso blu scuro del header */
 }
