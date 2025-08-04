@@ -10,3 +10,38 @@
   margin-bottom: 20px;
   color: #111827; /* stesso blu scuro del header */
 }
+
+.calendar-main {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+  
+}
+
+.container-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between, flex-start;
+
+}
+
+
+.calendar-giorno-corrente {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  overflow-y: auto;
+  height: 100%;
+}
+
+.calendar-mese-corrente {
+  flex: 2; 
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  overflow-y: auto;
+}

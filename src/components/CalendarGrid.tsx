@@ -12,19 +12,19 @@ const CalendarGrid = () => {
     // Calcolo dell'inizio della settimana del primo giorno del mese
     const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 }); // settimana che inizia lunedì
 
+
     const weeks = [];
     let currentDate = calendarStart;
-
     
     while (currentDate <= monthEnd) {
         const week = Array.from({ length: 7 }, (_, i) => {
         const date = addDays(currentDate, i);
         return date;
-    });
+        });
 
-    weeks.push(week);
-    currentDate = addDays(currentDate, 7);
-}
+        weeks.push(week);
+        currentDate = addDays(currentDate, 7);
+    }   
 
     return (
         <>

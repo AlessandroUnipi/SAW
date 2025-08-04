@@ -7,22 +7,32 @@ interface WeekRowProps {
   currentDate: Date;
 }
 
+
 const WeekRow: React.FC<WeekRowProps> = ({ week, currentDate }) => {
+  
+  //Rileva la settimana corrente
+  const isCurrentWeek = week.some(day =>
+    day.getDate() === currentDate.getDate() &&
+    day.getMonth() === currentDate.getMonth() &&
+    day.getFullYear() === currentDate.getFullYear()
+  );
+
   return (
     <div className="week-row">
-      {week.map((date, index) => (
-        <DayCell
+      {week.map((day, index) => (
+        <DayCell 
           key={index}
-          date={date}
-          oggi={
-            date.getDate() === currentDate.getDate() &&
-            date.getMonth() === currentDate.getMonth() &&
-            date.getFullYear() === currentDate.getFullYear()
-          }
+          date={day}
+          oggi={day.getDate() === currentDate.getDate() && 
+                day.getMonth() === currentDate.getMonth() && 
+                day.getFullYear() === currentDate.getFullYear()}
+          isExpanded={isCurrentWeek} 
         />
       ))}
     </div>
   );
 };
 
+
 export default WeekRow;
+

@@ -1,13 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import './Header.css'; // Stili CSS per l'header
+import '../styles/Header.css'; // Stili CSS per l'header
+import LoginModal from "./Login"
+import { useAuth } from "../hooks/useAuth"
+
+
+
+
 const Header =() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const {user, logout} = useAuth();
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
       };
@@ -33,8 +41,18 @@ const Header =() => {
         
         {/* Pulsanti */}
         <div className="header-buttons">
-          <button className="register-button">Crea un account</button>
-          <button className="login-button">Account personale →</button>
+          {user ? (
+            <>
+              <span className="user">{user.email}</span>
+              <button onClick={logout}>Logout →</button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => setOpen(true)} className="login-button">Accedi</button>
+            <button onClick={() => setOpen(true) } className="register-button">Crea account</button>
+            </>
+          )}
+          {open && <LoginModal onClose={() => setOpen(false)}/>}
           
           {/* Menu mobile */}
           <button 
