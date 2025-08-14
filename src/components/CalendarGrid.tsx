@@ -1,9 +1,17 @@
-import React from "react";
 import WeekRow from "./WeekRow";
 import '../styles/CalendarGrid.css'; // Importa gli stili CSS per il CalendarGrid
-import  { startOfMonth, endOfMonth, startOfWeek, addDays, isSameMonth } from 'date-fns';
+import  { startOfMonth, endOfMonth, startOfWeek, addDays } from 'date-fns';
+import { Todo } from "../hooks/ToDo";
 
-const CalendarGrid = () => {
+interface Props {
+    todos: Todo[];
+    addTodo:    (hour: number, text: string) => void;
+    updateTodo: (todo: Todo) => void;
+    toggleTodo: (id: string) => void;
+    deleteTodo: (id: string) => void;
+}
+
+export default function CalendarGrid (todos: Todo[]/*{todos, addTodo, updateTodo, toggleTodo, deleteTodo}:Props*/) {
     const oggi = new Date();
     const monthStart = startOfMonth(oggi);
     const monthEnd = endOfMonth(monthStart);
@@ -44,5 +52,3 @@ const CalendarGrid = () => {
         </>
     );
 };
-
-export default CalendarGrid;

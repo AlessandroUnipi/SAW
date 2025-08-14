@@ -22,7 +22,7 @@ export default function LoginModal ({onClose}: Props) {
 
   const auth = getAuth();
 
-  const signup = async () => {
+  const handleSignup = async () => {
     setLoading(true);
     setError (null);
 
@@ -70,7 +70,7 @@ export default function LoginModal ({onClose}: Props) {
 
         {error && <p className="error">{error}</p>}
 
-        <button onClick={signup} disabled={loading}>
+        <button onClick={handleSignup} disabled={loading}>
           {mode === "login" ? "Entra" : "Registrati"}
         </button>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import '../styles/Header.css'; // Stili CSS per l'header
 import LoginModal from "./Login"
 import { useAuth } from "../hooks/useAuth"
@@ -7,29 +7,45 @@ import { useAuth } from "../hooks/useAuth"
 
 
 
-const Header =() => {
+export default function Header () {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [openLogin, setOpenLogin] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const [open, setOpen] = useState(false);
   const {user, logout} = useAuth();
+  const navigate = useNavigate();
+
+  const calendarHref = user ? `/Calendario/${user.uid}` : "/Calendario/ospite";
+
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/Calendario/ospite"), {replace: true}
+    }catch (err){
+      console.error("Logout Error:", err);
+    }
+  }
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+    if (!isMenuOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setIsMenuOpen(false);
       }
-      };
+    };
 
-      if (isMenuOpen) {
-        document.addEventListener("mousedown", handleClickOutside);
-      } else {
-        document.removeEventListener("mousedown", handleClickOutside);
-      }
+    const onEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsMenuOpen(false);
+    };
+      document.addEventListener("mousedown", onDown);
+      document.addEventListener("keydown", onEsc);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onEsc);
+    };
 
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [isMenuOpen]);
+  }, [isMenuOpen]);
+
 
   return (
     <header className="header">
@@ -44,15 +60,13 @@ const Header =() => {
           {user ? (
             <>
               <span className="user">{user.email}</span>
-              <button onClick={logout}>Logout →</button>
+              <button onClick={logout} className="btn secondary">Logout →</button>
             </>
           ) : (
             <>
-              <button onClick={() => setOpen(true)} className="login-button">Accedi</button>
-            <button onClick={() => setOpen(true) } className="register-button">Crea account</button>
+              <button onClick={() => setOpenLogin(true)} className="login-button">Accedi</button>
             </>
           )}
-          {open && <LoginModal onClose={() => setOpen(false)}/>}
           
           {/* Menu mobile */}
           <button 
@@ -60,31 +74,45 @@ const Header =() => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Menu"
           >
+
             <svg className="menu-icon" viewBox="0 0 24 24">
               <path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
             </svg>
           </button>
         </div>
       </div>
+
+      {isMenuOpen && <div className="menu-backdrop" onClick={() => setIsMenuOpen(false)} />}
    
       {/* Menu mobile dropdown */}
       {isMenuOpen && (
           <div className="menu-popup" ref={menuRef}>
 
-            <Link to="/">
-              <button className="menu-button-item">Home</button>
-            </Link>
+          <Link to="/" onClick={() => setIsMenuOpen(false)} className="menu-button-item">
+            Home
+          </Link>
 
-            <button className="menu-button-item">Chi siamo</button>
+          <Link to={calendarHref} onClick={() => setIsMenuOpen(false)} className="menu-button-item">
+            Calendario
+          </Link>
 
-            <Link to="/calendario">
-              <button className="menu-button-item">Calendario</button>
-            </Link>
+          {user ? (
+            <button className="menu-button-item" onClick={handleLogout}>
+              Logout
+            </button>
+          ):(
+             <button
+                className="menu-button-item"
+                onClick={() => {
+                setIsMenuOpen(false);
+                setOpenLogin(true);
+              }}>Login</button>
+          )}
+
           </div>
       )}
+      {openLogin && <LoginModal onClose={() => setOpenLogin(false)} />}
     </header>
     );
 }
 
-
-export default Header;

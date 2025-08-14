@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import "../styles/TodayDetails.css";
-import { useTodo } from "../hooks/ToDo";
 // 👉 importa esplicitamente il tipo Todo (assicurati che sia esportato dal file hooks/ToDo.ts)
 import type { Todo } from "../hooks/ToDo";
 
-/**
- * TodayDetails v2.2
- * – layout compatto: HH:00 | ✓ | testo / input
- * – un solo To-Do per ora
- * – checkbox visibile solo quando il To-Do esiste
- * – Enter salva correttamente il nuovo testo (fix type)
- */
-const TodayDetails: React.FC = () => {
-  const { getTodosbyHours, addTodo, toggleTodo, updateTodo } = useTodo();
+interface Props {
+  getTodosByHour: (hour: number) => Todo[];
+  addTodo:    (hour: number, text: string) => void;
+  updateTodo: (todo: Todo) => void;
+  toggleTodo: (id: string) => void;
+  deleteTodo: (id: string) => void;
+}
+
+export default function TodayDetails ({getTodosByHour, addTodo, updateTodo, toggleTodo, deleteTodo}: Props)  {
 
   const [editingHour, setEditingHour] = useState<number | null>(null); // serve a capire su quale riga siamo (ci dice l'ora)
   const [editingText, setEditingText] = useState<string>(""); // serve a mantenere il testo digitato nell'input mentre l'utente scrive
@@ -54,7 +53,6 @@ const TodayDetails: React.FC = () => {
 
   return (
     <div className="today-details">
-      <h2>Oggi</h2>
       <h3>
         {new Date().toLocaleDateString("it-IT", {
           weekday: "long",
@@ -64,7 +62,7 @@ const TodayDetails: React.FC = () => {
       </h3>
 
       {hours.map((hour) => {
-        const todo = getTodosbyHours(hour)[0]; // 0-1 todo per ora
+        const todo = getTodosByHour(hour)[0]; // 0-1 todo per ora
         const isEditing = editingHour === hour;
 
         return (
@@ -112,4 +110,3 @@ const TodayDetails: React.FC = () => {
   );
 };
 
-export default TodayDetails;

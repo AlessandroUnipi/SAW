@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 export interface Todo {
     id: string;
-    hours: number;
+    hour: number;
     text: string;
     completed: boolean;
 };
@@ -12,10 +12,10 @@ export const useTodo = () => {
     const [todos, setTodos] = useState<Todo[]>([]);
 
     // Aggiungo le funzioni: addTodo, toggleTodo, deleteTodo, updateTodo
-    const addTodo = ( hours: number, text: string) => {
+    const addTodo = ( hour: number, text: string) => {
         setTodos(prev => [
             ...prev,
-            {id: window.crypto.randomUUID(), hours, text, completed: false},
+            {id: window.crypto.randomUUID(), hour, text, completed: false},
         ])
     };
 
@@ -45,7 +45,7 @@ export const useTodo = () => {
 
     //Iserisco i Todo nelle loro ore
     const getTodosbyHours = (hour: number) => {
-        return todos.filter(todo => todo.hours === hour);
+        return todos.filter(todo => todo.hour === hour);
     };
 
     return { todos, addTodo, toggleTodo, deleteTodo, getTodosbyHours, updateTodo };
