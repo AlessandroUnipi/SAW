@@ -1,18 +1,64 @@
-.calendar-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* ===== GRIGLIA MESE – COMPATTA, SETTIMANA SELEZIONATA ESPANSA ===== */
+
+.calendar-mese-corrente { padding: 12px; border-radius: 12px; }
+
+.calendar-header h2 {
+  margin: 0 0 6px 0;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: capitalize;
 }
 
+/* Intestazione giorni della settimana */
 .days-of-week {
   display: grid;
-  font-weight: bold;
   grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 6px;
+  color: #6b7280;
+  font-size: .78rem;
   text-align: center;
-  padding: 10px 0;
 }
 
-.day-header {
-  padding: 5px 0;
-  border-bottom: 1px solid #ccc;
+/* Corpo mese */
+.calendar-grid { display: grid; gap: 4px; }
+
+/* Ogni settimana = riga a 7 colonne */
+.week-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+/* Celle compatte / settimana selezionata espansa */
+.week-row.compact  .day-cell { min-height: 60px; padding: 6px; }
+.week-row.expanded .day-cell { min-height: 110px; padding: 6px; }
+
+/* Cella giorno */
+.day-cell {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 6px;
+  background: #fff;
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: background .15s, box-shadow .15s;
+}
+.day-cell:hover { background: #f9fafb; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+
+.day-number { font-size: .9rem; font-weight: 600; color: #111827; }
+
+/* Giorno selezionato */
+.day-cell.selected {
+  background: rgba(37, 99, 235, 0.06);
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
+
+
+.day-cell.today:not(.selected) {
+  background: rgba(16, 185, 129, 0.08);     /* verde tenue */
+  outline: 2px solid rgba(16, 185, 129, .35);
+  outline-offset: -2px;
 }

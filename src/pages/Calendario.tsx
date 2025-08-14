@@ -1,4 +1,5 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useTodoFS } from "../hooks/useTodoFS";
 import { useTodoLocal } from "../hooks/useTodoLocal";
@@ -7,10 +8,28 @@ import TodayDetails from "../components/TodayDetails";
 import "../styles/Calendario.css";
 
 export default function CalendarioPage() {
-  /* -------- recupero id rotta + utente loggato -------- */
   const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const { user, loading} = useAuth();
+  const navigate = useNavigate();
   const isOwner = user?.uid === id;
+
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+
+  useEffect(() => {
+    if (!id || loading) return;
+                  
+    // Se ora sono loggato e l'URL è "ospite" (o un altro id), portami al mio uid
+    if (user && id !== user.uid) {
+      navigate(`/Calendario/${user.uid}`, { replace: true });
+      return;
+    }
+
+    // Se non sono loggato e sto guardando un uid, torna alla modalità ospite
+    if (!user && id !== "ospite") {
+      navigate(`/Calendario/ospite`, { replace: true });
+    }
+  }, [id, user?.uid, loading, navigate]);
 
   /* -------- hook dati (Firestore o LocalStorage) ------- */
   const {
@@ -20,25 +39,33 @@ export default function CalendarioPage() {
     toggleTodo,
     deleteTodo,
     getTodosByHour,
-  } = isOwner ? useTodoFS(id!) : useTodoLocal(id!);
+  } = isOwner ? useTodoFS(id!, selectedDate) : useTodoLocal(id!, selectedDate);
 
-  /* --------------------- UI ---------------------------- */
   return (
     <div className="calendario-page">
-      {/* Banner ospite */}
+
       {!isOwner && (
         <p className="guest-banner">
-          Modalità ospite &mdash; le modifiche saranno salvate solo su questo
-          dispositivo.
+          Modalità ospite — i dati restano su questo dispositivo.
         </p>
       )}
 
       <div className="calendar-main">
+
         {/* Colonna sinistra: dettagli di oggi */}
         <div className="container-left">
           <div className="calendar-giorno-corrente">
-            <h2>Oggi</h2>
+
+            <h2>{selectedDate.toLocaleDateString("it-IT", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+              </h2>
+
             <TodayDetails
+              selectedDate={selectedDate}
               getTodosByHour={getTodosByHour}
               addTodo={addTodo}
               updateTodo={updateTodo}
@@ -52,10 +79,8 @@ export default function CalendarioPage() {
         <div className="calendar-mese-corrente">
           <CalendarGrid
             todos={todos}
-            addTodo={addTodo}
-            updateTodo={updateTodo}
-            toggleTodo={toggleTodo}
-            deleteTodo={deleteTodo}
+            selectedDate={selectedDate}
+            onSelectDay={setSelectedDate}
           />
         </div>
       </div>

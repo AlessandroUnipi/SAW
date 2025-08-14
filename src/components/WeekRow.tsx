@@ -1,38 +1,27 @@
-import DayCell from './DayCell';
-import React from 'react';
-import '../styles/WeekRow.css'; // Importa gli stili CSS per il WeekRow
+// src/components/WeekRow.tsx
+import DayCell from "./DayCell";
 
 interface WeekRowProps {
   week: Date[];
-  currentDate: Date;
+  selectedKey: string;
+  isExpanded: boolean;                 // 👈 nuovo
+  onSelectDay?: (date: Date) => void;
 }
 
-
-const WeekRow: React.FC<WeekRowProps> = ({ week, currentDate }) => {
-  
-  //Rileva la settimana corrente
-  const isCurrentWeek = week.some(day =>
-    day.getDate() === currentDate.getDate() &&
-    day.getMonth() === currentDate.getMonth() &&
-    day.getFullYear() === currentDate.getFullYear()
-  );
-
+const WeekRow: React.FC<WeekRowProps> = ({ week, selectedKey, isExpanded, onSelectDay }) => {
   return (
-    <div className="week-row">
-      {week.map((day, index) => (
-        <DayCell 
-          key={index}
+    <div className={`week-row ${isExpanded ? "expanded" : "compact"}`}>
+      {week.map((day, i) => (
+        <DayCell
+          key={i}
           date={day}
-          oggi={day.getDate() === currentDate.getDate() && 
-                day.getMonth() === currentDate.getMonth() && 
-                day.getFullYear() === currentDate.getFullYear()}
-          isExpanded={isCurrentWeek} 
-        />
-      ))}
-    </div>
+          isExpanded={isExpanded}
+          selectedKey={selectedKey}
+          onSelectDay={onSelectDay}
+      />
+  ))}
+</div>
   );
 };
 
-
 export default WeekRow;
-

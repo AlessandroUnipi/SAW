@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import '../styles/Header.css'; // Stili CSS per l'header
 import LoginModal from "./Login"
 import { useAuth } from "../hooks/useAuth"
@@ -13,14 +13,19 @@ export default function Header () {
   const menuRef = useRef<HTMLDivElement>(null);
   const {user, logout} = useAuth();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const calendarHref = user ? `/Calendario/${user.uid}` : "/Calendario/ospite";
 
 
   const handleLogout = async () => {
     try {
+      
       await logout();
-      navigate("/Calendario/ospite"), {replace: true}
+      if (pathname.startsWith("/Calendario")) {
+        navigate("/Calendario/ospite", { replace: true });
+      }
+
     }catch (err){
       console.error("Logout Error:", err);
     }
@@ -28,6 +33,7 @@ export default function Header () {
 
   useEffect(() => {
     if (!isMenuOpen) return;
+
     const onDown = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setIsMenuOpen(false);
@@ -60,7 +66,7 @@ export default function Header () {
           {user ? (
             <>
               <span className="user">{user.email}</span>
-              <button onClick={logout} className="btn secondary">Logout →</button>
+              <button onClick={handleLogout} className="btn secondary">Logout →</button>
             </>
           ) : (
             <>
@@ -106,7 +112,7 @@ export default function Header () {
                 onClick={() => {
                 setIsMenuOpen(false);
                 setOpenLogin(true);
-              }}>Login</button>
+              }}>Accedi</button>
           )}
 
           </div>

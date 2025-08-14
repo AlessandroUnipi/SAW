@@ -1,142 +1,101 @@
-/**
- * Stili per il componente TodayDetails
- * ──────────────────────────────────────
- * • Layout flessibile riga-per-riga per le 24 ore
- * • Input rapido “+” e campo edit condividono stile base .text-input
- * • Responsive: sotto 600 px le righe diventano a colonna
- */
+/* ===== TODAY DETAILS – COMPATTO ===== */
 
 .today-details {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 0.5rem 1rem;
-  max-width: 720px;
-  margin: 0 auto;
 }
 
-/* Header */
-.today-details h2 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-.today-details h3 {
-  margin: 0 0 1rem;
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #666;
-}
+.hours { display: flex; flex-direction: column; gap: 0; }
 
-/* RIGA ORARIA */
+/* [ora][check][input][x] */
 .hour-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid #eee;
+  display: grid;
+  grid-template-columns: 52px 20px 1fr 28px;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 4px 4px;
+  border-bottom: 1px dashed #eef2f7;
+}
+.hour-row:last-child { border-bottom: 0; }
+
+.hour-row:hover,
+.hour-row:focus-within {
+  background: #fafafa;
+  border-radius: 8px;
 }
 
-.hour-label {
-  width: 4.5rem; /* 00:00 */
-  text-align: right;
-  font-weight: 600;
-  color: #444;
-  flex-shrink: 0;
+/* Ora */
+.hour {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #111827;
 }
 
-/* Input base */
+/* Checkbox: teniamo lo spazio ma la nascondiamo se non c'è todo */
+.hour-row input[type="checkbox"] { width: 14px; height: 14px; accent-color: #2563eb; }
+.hour-row:not(.has-todo) input[type="checkbox"] { visibility: hidden; }
+
+/* Input piena larghezza */
 .text-input {
-  padding: 0.25rem 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  font-family: inherit;
-  background: #fff; /* 🆕 sfondo chiaro esplicito */
-  color: #000;      /* 🆕 testo sempre leggibile */
+  display: block;
+  width: 100%;
+  min-width: 0;               /* necessario nei grid items */
+  box-sizing: border-box;
+  min-height: 26px;
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #111827;
+  font-size: 0.90rem;
+  transition: border-color .15s, background .15s, padding .15s;
 }
-
-.text-input::placeholder {
-  color: #777;
-}
+.text-input::placeholder { color: #9ca3af; font-size: 0.90rem; }
 
 .text-input:focus {
-  outline: none;
-  border-color: #777;
-  background: #fff;
+  outline: 2px solid #93c5fd;
+  outline-offset: 1px;
+  border-color: #60a5fa;
 }
 
-/* Input nuovo To-Do (icona “+” come placeholder) */
-.new-todo-input {
-  width: 160px;
-  max-width: 40%;
+/* Riga con todo: input “piatto” finché non è in focus */
+.hour-row.has-todo .text-input:not(:focus) {
+  border-color: transparent;
+  background: transparent;
+  padding-left: 0;
 }
 
-/* Lista To-Do */
-.todo-list {
-  flex: 1;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-/* Singolo To-Do */
-.todo-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.todo-item input[type="checkbox"] {
-  width: 1rem;
-  height: 1rem;
-  cursor: pointer;
-}
-
-/* Campo edit in-line (riusa .text-input) */
-.edit-input {
-  flex: 1;
-}
-
-/* Bottone elimina */
-.delete-btn {
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  color: #d33;
-  cursor: pointer;
-  line-height: 1;
-  padding: 0 0.25rem;
-  transition: color 0.2s;
-}
-
-.delete-btn:hover {
-  color: #a00;
-}
-
-/* To-Do completato (fallback) */
-.todo-item .completed {
+/* Stato completato (fuori focus) */
+.hour-row.is-completed .text-input:not(:focus) {
+  color: #9ca3af;
   text-decoration: line-through;
-  color: #888;
 }
 
-/* ───── Responsive ───── */
-@media (max-width: 600px) {
-  .hour-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
+/* Delete compatto (renderizzato solo se esiste il todo) */
+.todo-delete{
+  width: 26px; height: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid #e5e7eb;
+  background: transparent; color: #6b7280;
+  border-radius: 6px; cursor: pointer;
+}
+.todo-delete:hover { background: #fee2e2; border-color: #fecaca; color: #b91c1c; }
 
-  .hour-label {
-    width: auto;
-    text-align: left;
-    margin-bottom: 0.25rem;
-  }
+/* Accessibilità focus */
+.text-input:focus-visible,
+.todo-delete:focus-visible,
+.hour-row input[type="checkbox"]:focus-visible {
+  outline: 2px solid #93c5fd; outline-offset: 2px;
+}
 
-  .new-todo-input {
-    width: 100%;
-    max-width: none;
-  }
+/* Breakpoint leggero */
+@media (max-width: 900px) {
+  .hour-row { grid-template-columns: 48px 18px 1fr 26px; }
 }

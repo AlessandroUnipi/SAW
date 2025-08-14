@@ -1,47 +1,70 @@
+/* ===== CALENDARIO – LAYOUT A DUE COLONNE, SCROLL SOLO INTERNO ===== */
+
+/* Regola l’altezza dell’header se necessario */
+:root { --header-h: 64px; }
+
 .calendario-page {
-  margin-top: 64px; /* spazio per header fisso */
-  padding: 20px;
-  background-color: #f9f9f9; /* colore di sfondo chiaro */
-  min-height: calc(100vh - 64px);
+  min-height: calc(100vh - var(--header-h));
+  display: flex;
+  flex-direction: column;
+  padding: 0 12px 12px;
 }
 
-.calendario-page h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #111827; /* stesso blu scuro del header */
+/* Banner ospite (opzionale) */
+.guest-banner {
+  margin: 8px 0 12px;
+  padding: 8px 12px;
+  background: #fff7ed;
+  color: #9a3412;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  font-size: 0.9rem;
 }
 
 .calendar-main {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  gap: 20px;
-  
+  display: grid;
+  grid-template-columns: 1.1fr 1.9fr; /* sx : dx */
+  gap: 16px;
+  height: calc(100vh - var(--header-h) - 24px); /* evita scroll della pagina */
+  align-items: stretch; /* allunga entrambi i pannelli */
 }
 
-.container-left {
-  flex: 1;
+.container-left,
+.calendar-mese-corrente { height: 100%; }
+
+/* Card/pannelli */
+.calendar-giorno-corrente,
+.calendar-mese-corrente {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between, flex-start;
-
 }
 
-
-.calendar-giorno-corrente {
-  background-color: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  overflow-y: auto;
-  height: 100%;
+.calendar-giorno-corrente h2,
+.calendar-mese-corrente h2 {
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
-.calendar-mese-corrente {
-  flex: 2; 
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  overflow-y: auto;
+/* Scorre solo il contenuto interno */
+.calendar-giorno-corrente .today-details {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+.calendar-mese-corrente { overflow: hidden; }
+.calendar-mese-corrente .calendar-header { flex: 0 0 auto; }
+.calendar-mese-corrente .calendar-grid {
+  flex: 1 1 auto;
+  overflow: auto; /* scorre la griglia, non il pannello */
+}
+
+/* breakpoint (facoltativo) */
+@media (max-width: 1100px) {
+  .calendar-main { grid-template-columns: 1fr 1fr; }
 }

@@ -1,54 +1,5 @@
-.day-cell {
-  border: 1px solid #ccc;
-  background-color: white;
-  transition: background-color 0.2s;
-  box-sizing: border-box;
+/* DayCell: spostiamo tutta la logica di layout in CalendarGrid.css */
+.day-cell { /* aspetti di base già definiti in CalendarGrid.css */ }
+.day-number { font-weight: 600; }
 
-  width: 100%;
-  aspect-ratio: 1.13;    /* Celle quadrate */
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 1.4rem;   /* Numeri più grandi */
-  color: #111827;     /* Colore del testo */
-  font-weight: 500;   /* Testo in grassetto */
-  cursor: pointer;
-
-}
-
-.day-cell.today {
-  background-color: #2563eb;  /* Blu per il giorno corrente */
-  color: white;
-  font-weight: bold;
-}
-
-.day-cell.expanded {
-  aspect-ratio: auto;          /* Disabilita il quadrato per la settimana aperta */
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  min-height: 300px;           /* Altezza ridotta ma espansa */
-  width: 100%;
-  padding: 8px;
-}
-
-/* Data in alto nella modalità espansa */
-.day-cell.expanded .day-date {
-  font-weight: bold;
-  margin-bottom: 4px;
-  font-size: 1rem;
-}
-
-/* Lista To-Do */
-.day-cell.expanded .day-todo {
-  list-style: disc;
-  padding-left: 16px;
-  margin: 0;
-  font-size: 0.85rem;
-}
-
-.day-cell.expanded .day-todo li {
-  margin-bottom: 3px;
-}
+/* mantieni solo eventuali personalizzazioni non di layout qui */

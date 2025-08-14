@@ -1,33 +1,27 @@
-import React from "react";
-import '../styles/DayCell.css'; // Importa gli stili CSS per il DayCell
+// src/components/DayCell.tsx
+import { dayKeyOf } from "../hooks/ToDo";
 
 interface DayCellProps {
-    date: Date;
-    oggi: boolean;
-    isExpanded: boolean;
+  date: Date;
+  isExpanded: boolean;
+  selectedKey: string;
+  onSelectDay?: (date: Date) => void;
 }
 
-const DayCell: React.FC<DayCellProps> = ({ date, oggi, isExpanded }) => {
-  if(isExpanded) {
-    return(
-      <div className = {`day-cell expanded ${oggi ? 'today' : ''}`}>
-        <div className="day-date">
-          {date.toLocaleDateString("it-IT", {day: 'numeric' })}
-        </div>
-        <ul className="day-todo">
-          <li>To Do 1</li>
-          <li>To Do 2</li>
-        </ul>
-      </div>
-        
-    );
-  }else{
-    return (
-      <div className={`day-cell ${oggi ? 'today' : ''}`}>
-        <span>{date.getDate()}</span>
-      </div>
-    );}
-  
+const DayCell: React.FC<DayCellProps> = ({ date, isExpanded, selectedKey, onSelectDay }) => {
+  const isSelected = dayKeyOf(date) === selectedKey;
+  const isToday    = dayKeyOf(date) === dayKeyOf(new Date()); // 👈 oggi
+
+  return (
+    <div
+      className={`day-cell ${isExpanded ? "expanded" : ""} ${isSelected ? "selected" : ""} ${
+        isToday ? "today" : ""
+      }`}
+      onClick={() => onSelectDay?.(date)}
+    >
+      <span className="day-number">{date.getDate()}</span>
+    </div>
+  );
 };
 
 export default DayCell;

@@ -1,112 +1,126 @@
-import React, { useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { Todo, dayKeyOf } from "../hooks/ToDo";
 import "../styles/TodayDetails.css";
-// 👉 importa esplicitamente il tipo Todo (assicurati che sia esportato dal file hooks/ToDo.ts)
-import type { Todo } from "../hooks/ToDo";
 
-interface Props {
+type Props = {
+  selectedDate: Date;
   getTodosByHour: (hour: number) => Todo[];
-  addTodo:    (hour: number, text: string) => void;
+  addTodo: (hour: number, text: string) => void;
   updateTodo: (todo: Todo) => void;
   toggleTodo: (id: string) => void;
   deleteTodo: (id: string) => void;
-}
+};
 
-export default function TodayDetails ({getTodosByHour, addTodo, updateTodo, toggleTodo, deleteTodo}: Props)  {
+const pad = (n: number) => String(n).padStart(2, "0");
 
-  const [editingHour, setEditingHour] = useState<number | null>(null); // serve a capire su quale riga siamo (ci dice l'ora)
-  const [editingText, setEditingText] = useState<string>(""); // serve a mantenere il testo digitato nell'input mentre l'utente scrive
+export default function TodayDetails({
+  selectedDate,
+  getTodosByHour,
+  addTodo,
+  updateTodo,
+  toggleTodo,
+  deleteTodo,
+}: Props) {
+  const [editingHour, setEditingHour] = useState<number | null>(null);
+  const inputRefs = useRef<Record<number, HTMLInputElement | null>>({});
+  const selectedKey = dayKeyOf(selectedDate);
 
-  
-  const startEdit = (hour: number, currentText: string) => {
-    setEditingHour(hour);
-    setEditingText(currentText);
-  };
-
-  const stopEdit = () => {
+  // opzionale: quando cambio giorno, esco dall'editing
+  useEffect(() => {
     setEditingHour(null);
-    setEditingText("");
+  }, [selectedKey]);
+
+  const startEdit = (hour: number) => {
+    setEditingHour(hour);
+    requestAnimationFrame(() => inputRefs.current[hour]?.focus());
   };
 
-  /*Gestisce Enter/Escape durante la creazione o modifica in-line.*/
-  const handleKeyUp = (
-    hour: number,
-    todo: Todo | undefined,
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (e.key === "Enter" && editingText.trim()) {
-      if (todo) {
-        // modifica esistente
-        updateTodo({ ...todo, text: editingText.trim() });
+  const handleKeyUp = (hour: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    const el = e.currentTarget;
+    const text = (el.value || "").trim();
+    const existing = getTodosByHour(hour)[0]; // un solo todo per ora
+
+    if (e.key === "Enter") {
+      if (!text) {
+        // testo vuoto → cancella se esiste
+        if (existing) {
+          deleteTodo(existing.id);
+          el.value = "";
+        }
+      } else if (existing) {
+        // modifica
+        updateTodo({ ...existing, text });
       } else {
-        // creazione
-        addTodo(hour, editingText.trim());
+        // nuovo
+        addTodo(hour, text);
       }
-      stopEdit();
+      setEditingHour(null);
+      el.blur();
+      return;
     }
 
     if (e.key === "Escape") {
-      stopEdit();
+      // ripristina testo precedente (o vuoto) e esci
+      el.value = existing?.text ?? "";
+      setEditingHour(null);
+      el.blur();
     }
   };
 
-  const hours = Array.from({ length: 24 }, (_, i) => i);
-
   return (
     <div className="today-details">
-      <h3>
-        {new Date().toLocaleDateString("it-IT", {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-        })}
-      </h3>
+      <div className="hours" key={selectedKey /* rimonta tutte le righe al cambio giorno */}>
+        {Array.from({ length: 24 }, (_, h) => {
+          const todo = getTodosByHour(h)[0];
+          const hasTodo = !!todo;
 
-      {hours.map((hour) => {
-        const todo = getTodosByHour(hour)[0]; // 0-1 todo per ora
-        const isEditing = editingHour === hour;
+          return (
+            <div
+              key={h}
+              className={`hour-row ${hasTodo ? "has-todo" : ""} ${todo?.completed ? "is-completed" : ""}`}
+            >
+              {/* Ora */}
+              <span className="hour">{pad(h)}:00</span>
 
-        return (
-          <div key={hour} className="hour-row">
-            {/* Ora */}
-            <span className="hour-label">
-              {hour.toString().padStart(2, "0")}:00
-            </span>
-
-            {/* Checkbox – visibile solo se esiste il todo */}
-            {todo && (
+              {/* Checkbox: nel DOM sempre, ma il CSS la nasconde se non c'è todo */}
               <input
                 type="checkbox"
-                className="todo-checkbox"
-                checked={todo.completed}
-                onChange={() => toggleTodo(todo.id)}
-                aria-label={`Completa To-Do delle ${hour}`}
+                checked={!!todo && todo.completed}
+                onChange={() => todo && toggleTodo(todo.id)}
+                aria-label="Completa"
               />
-            )}
 
-            {/* Testo o input */}
-            {isEditing ? (
+              {/* Input: key forza il remount quando cambia giorno/ora/todo */}
               <input
-                className="text-input single"
-                value={editingText}
-                autoFocus
-                onChange={(e) => setEditingText(e.target.value)}
-                onKeyUp={(e) => handleKeyUp(hour, todo, e)}
-                aria-label={todo ? "Modifica To-Do" : "Crea To-Do"}
+                key={`${selectedKey}-${todo?.id ?? "none"}-${h}`}
+                ref={(el) => { inputRefs.current[h] = el; }}
+                className="text-input"
+                placeholder="clicca per aggiungere"
+                defaultValue={todo?.text ?? ""}
+                onFocus={() => startEdit(h)}
+                onKeyUp={(e) => handleKeyUp(h, e)}
               />
-            ) : (
-              <span
-                className={`todo-text ${todo?.completed ? "done" : ""}`}
-                onClick={() => startEdit(hour, todo ? todo.text : "")}
-                style={{textDecoration: todo?.completed ? 'line-through' : 'none'}}
-                
-              >
-                {todo ? todo.text : "clicca per aggiungere"}
-              </span>
-            )}
-          </div>
-        );
-      })}
+
+              {/* Delete: solo se esiste il todo */}
+              {todo && (
+                <button
+                  className="todo-delete"
+                  onClick={() => {
+                    deleteTodo(todo.id);
+                    const el = inputRefs.current[h];
+                    if (el) el.value = ""; // svuota subito il campo
+                    setEditingHour(null);
+                  }}
+                  aria-label="Elimina"
+                  title="Elimina"
+                >
+                  &times;
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
-};
-
+}

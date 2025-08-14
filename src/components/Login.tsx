@@ -8,6 +8,7 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import "../styles/Login.css";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   onClose: () => void;
@@ -20,7 +21,13 @@ export default function LoginModal ({onClose}: Props) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
   const auth = getAuth();
+
+  const doNavigate = () => {
+    const uid = auth.currentUser?.uid;
+    if (uid) navigate(`/Calendario/${uid}`, { replace: true });
+  };
 
   const handleSignup = async () => {
     setLoading(true);
@@ -34,6 +41,7 @@ export default function LoginModal ({onClose}: Props) {
       };
 
       onClose(); // Chiudo il popup
+      doNavigate();
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -41,10 +49,12 @@ export default function LoginModal ({onClose}: Props) {
     };
   };
 
+
   const googleLogin = async() => {
     try {
       await signInWithPopup(auth, new GoogleAuthProvider());
       onClose();
+      doNavigate();
     } catch (e: any){
       setError(e.message);
     }

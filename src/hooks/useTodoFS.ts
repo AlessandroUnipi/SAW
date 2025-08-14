@@ -1,101 +1,103 @@
+// src/hooks/useTodoFS.ts
 import {
-  collection,
-  query,
-  where,
-  orderBy,
+  collection, 
+  query, 
+  where, 
+  orderBy, 
   onSnapshot,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  doc
 } from "firebase/firestore";
+
 import { useEffect, useState, useCallback } from "react";
 import { db } from "../firebase/firebaseConfig";
-import type { Todo } from "./ToDo";
+import { Todo, TodoApi, dayKeyOf, monthKeyOf } from "./ToDo";
 
-/**
- * Hook Firestore
- * --------------
- * Salva e sincronizza i Todo di UN utente (uid) nel giorno corrente.
- */
-export const useTodoFS = (uid: string) => {
+export const useTodoFS = (uid: string, date: Date): TodoApi => {
   const [todos, setTodos] = useState<Todo[]>([]);
 
-  /* 1. evita crash se uid mancante (es. prima del login) */
   if (!uid) {
     return {
       todos,
-      addTodo: () => {},
-      toggleTodo: () => {},
-      deleteTodo: () => {},
-      updateTodo: () => {},
+      addTodo: async () => {},
+      toggleTodo: async () => {},
+      deleteTodo: async () => {},
+      updateTodo: async () => {},
       getTodosByHour: () => [],
-    } as const;
+    };
   }
 
-  /* 2. listener realtime sul giorno corrente */
   useEffect(() => {
-    const today = new Date().toLocaleDateString("it-IT"); // YYYY-MM-DD
-    const ref   = collection(db, "users", uid, "todos");
-    const q     = query(ref, where("dayKey", "==", today), orderBy("hour"));
+    const key = dayKeyOf(date);
+    const ref = collection(db, "users", uid, "todos");
+    const q = query(ref, where("dayKey", "==", key), orderBy("hour"));
 
-    const unsub = onSnapshot(q, (snap) =>
-      setTodos(
-        snap.docs.map(
-          (d) => ({ id: d.id, ...(d.data() as Omit<Todo, "id">) }) as Todo,
+    const unsub = onSnapshot(
+      q,
+      (snap) =>
+        setTodos(
+          snap.docs.map(
+            (d) => ({ id: d.id, ...(d.data() as Omit<Todo, "id">) }) as Todo
+          )
         ),
-      ),
+      (err) => console.error("Firestore onSnapshot error:", err)
     );
-
-    return unsub; // pulizia al cambio user / giorno
-  }, [uid]);
-
+    return unsub;
+  }, [uid, date]);
 
   const addTodo = useCallback(
-    (hour: number, text: string) => {
-      const dayKey   = new Date().toLocaleDateString("it-IT");
-      const monthKey = dayKey.slice(0, 7);
-
-      return addDoc(collection(db, "users", uid, "todos"), {
-        hour,
-        text,
-        completed: false,
-        dayKey,
-        monthKey,
-      });
+    async (hour: number, text: string) => {
+      try {
+        const key = dayKeyOf(date);
+        await addDoc(collection(db, "users", uid, "todos"), {
+          hour,
+          text,
+          completed: false,
+          dayKey: key,
+          monthKey: monthKeyOf(date),
+        });
+      } catch (err) {
+        console.error("Firestore addTodo error:", err);
+      }
     },
-    [uid],
+    [uid, date]
   );
 
   const toggleTodo = useCallback(
-    (id: string) => {
-      const tgt = todos.find((t) => t.id === id);
-      if (!tgt) return;
-      return updateDoc(doc(db, "users", uid, "todos", id), {
-        completed: !tgt.completed,
-      });
+    async (id: string) => {
+      try {
+        const tgt = todos.find((t) => t.id === id);
+        if (!tgt) return;
+        await updateDoc(doc(db, "users", uid, "todos", id), {
+          completed: !tgt.completed,
+        });
+      } catch (err) {
+        console.error("Firestore toggleTodo error:", err);
+      }
     },
-    [uid, todos],
+    [uid, todos]
   );
 
-  const deleteTodo = (id: string) =>
-    deleteDoc(doc(db, "users", uid, "todos", id));
-
-  const updateTodo = (todo: Todo) => {
-    const { id, ...rest } = todo;
-    return updateDoc(doc(db, "users", uid, "todos", id), rest);
+  const deleteTodo = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "users", uid, "todos", id));
+    } catch (err) {
+      console.error("Firestore deleteTodo error:", err);
+    }
   };
 
-  /* 4. helper */
-  const getTodosByHour = (hour: number) =>
-    todos.filter((t) => t.hour === hour);
+  const updateTodo = async (todo: Todo) => {
+    try {
+      const { id, ...rest } = todo;
+      await updateDoc(doc(db, "users", uid, "todos", id), rest);
+    } catch (err) {
+      console.error("Firestore updateTodo error:", err);
+    }
+  };
 
-  return {
-    todos,
-    addTodo,
-    toggleTodo,
-    deleteTodo,
-    updateTodo,
-    getTodosByHour,
-  } as const;
+  const getTodosByHour = (hour: number) => todos.filter((t) => t.hour === hour);
+
+  return { todos, addTodo, toggleTodo, deleteTodo, updateTodo, getTodosByHour };
 };
