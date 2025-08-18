@@ -1,44 +1,33 @@
-/*  firebaseConfig.ts
- *  -----------------
- *  • Inizializza UNA sola istanza Firebase App
- *  • Esporta auth e Firestore come singleton
- *  • Abilita la cache offline (IndexedDB) – può essere tolta lato SSR
- *  • Tutte le chiavi sono lette da variabili d’ambiente
- *    (prefisso VITE_ se usi Vite; REACT_APP_ per CRA; NEXT_PUBLIC_ per Next.js)
- */
-
+// firebaseConfig.ts
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import {
   getFirestore,
-  enableIndexedDbPersistence,
   initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
 } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-
+// Configurazione del progetto
 const firebaseConfig = {
-  apiKey:            import.meta.env.VITE_FB_API_KEY,
-  authDomain:        import.meta.env.VITE_FB_AUTH_DOMAIN,
-  projectId:         import.meta.env.VITE_FB_PROJECT_ID,
-  storageBucket:     import.meta.env.VITE_FB_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FB_MESSAGING_SENDER_ID,
-  appId:             import.meta.env.VITE_FB_APP_ID,
-  /* measurementId facoltativo */
+  apiKey: "AIzaSyCLcvLHmV_7etltYH17qOx0wGqIqIzHsCg",
+  authDomain: "saw2025-bde46.firebaseapp.com",
+  projectId: "saw2025-bde46",
+  storageBucket: "saw2025-bde46.firebasestorage.app",
+  messagingSenderId: "921166745406",
+  appId: "1:921166745406:web:afc07bfb62f1a56669666f",
+  measurementId: "G-17MN2ZMX1X"
 };
 
-/* ---------- Inizializzazione ---------- */
-export const app  = initializeApp(firebaseConfig);
+// Inizializza Firebase app
+const app = initializeApp(firebaseConfig);
 
-/* singole istanze condivise in tutta l’app */
-export const auth = getAuth(app);
-
-/* possiamo usare initializeFirestore per opzioni extra */
-export const db   = initializeFirestore(app, {
-  ignoreUndefinedProperties: true,
+// Inizializza Firestore con cache persistente (supporto multi-tab)
+const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
 });
 
-/* Cache offline / sync quando torna la connessione */
-enableIndexedDbPersistence(db).catch((err) => {
-  // Si scatena se due tab tentano la persistenza insieme
-  console.warn("Firestore offline persistence non abilitata:", err.code);
-});
+// Inizializza Auth
+const auth = getAuth(app);
+
+export { db, auth };

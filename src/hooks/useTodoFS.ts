@@ -58,6 +58,17 @@ export const useTodoFS = (uid: string, date: Date): TodoApi => {
           dayKey: key,
           monthKey: monthKeyOf(date),
         });
+        setTodos((prev) => [
+          ...prev,
+          {
+            id: crypto.randomUUID(),
+            hour,
+            text,
+            completed: false,
+            dayKey: dayKeyOf(date),
+            monthKey: monthKeyOf(date),
+          },
+        ]);
       } catch (err) {
         console.error("Firestore addTodo error:", err);
       }
@@ -73,6 +84,9 @@ export const useTodoFS = (uid: string, date: Date): TodoApi => {
         await updateDoc(doc(db, "users", uid, "todos", id), {
           completed: !tgt.completed,
         });
+        setTodos((prev) =>
+          prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+        );
       } catch (err) {
         console.error("Firestore toggleTodo error:", err);
       }
@@ -83,6 +97,7 @@ export const useTodoFS = (uid: string, date: Date): TodoApi => {
   const deleteTodo = async (id: string) => {
     try {
       await deleteDoc(doc(db, "users", uid, "todos", id));
+      setTodos((prev) => prev.filter((todo) => todo.id !== id));
     } catch (err) {
       console.error("Firestore deleteTodo error:", err);
     }
@@ -92,6 +107,8 @@ export const useTodoFS = (uid: string, date: Date): TodoApi => {
     try {
       const { id, ...rest } = todo;
       await updateDoc(doc(db, "users", uid, "todos", id), rest);
+      setTodos((prev) => prev.map((t) => (t.id === todo.id ? { ...t, ...todo } : t)));
+
     } catch (err) {
       console.error("Firestore updateTodo error:", err);
     }

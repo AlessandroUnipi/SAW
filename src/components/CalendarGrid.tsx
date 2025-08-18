@@ -5,8 +5,8 @@ import { startOfMonth, endOfMonth, startOfWeek, addDays } from "date-fns";
 import { Todo, dayKeyOf } from "../hooks/ToDo";
 
 interface Props {
-  todos: Todo[];                 // (utile in futuro per badge)
-  selectedDate: Date;            // 👈 arriva da Calendario.tsx
+  todos: Todo[];                 
+  selectedDate: Date;            
   onSelectDay?: (d: Date) => void;
 }
 

@@ -42,11 +42,7 @@ export default function TodayDetails({
 
     if (e.key === "Enter") {
       if (!text) {
-        // testo vuoto → cancella se esiste
-        if (existing) {
-          deleteTodo(existing.id);
-          el.value = "";
-        }
+        return;
       } else if (existing) {
         // modifica
         updateTodo({ ...existing, text });

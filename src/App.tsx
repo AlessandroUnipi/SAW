@@ -1,20 +1,27 @@
+// src/App.tsx
+import "./styles/App.css";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Header from "./components/Header";
+import HomePage from "./pages/HomePage";
+import Calendario from "./pages/Calendario";
 
-import './styles/App.css'
-import { BrowserRouter , Router, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import Calendario from './pages/Calendario';
-import Header from './components/Header';
-
-function App() {
+export default function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Header />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/Calendario/:id" element={<Calendario />} />
-        </Routes>
-    </BrowserRouter>
+      <Routes>
+        {/* Home */}
+        <Route path="/" element={<HomePage />} />
+
+        {/* /Calendario senza id → reindirizza a /Calendario/ospite */}
+        <Route path="/Calendario" element={<Navigate to="/Calendario/ospite" replace />} />
+
+        {/* Calendario con parametro :id (uid o 'ospite') */}
+        <Route path="/Calendario/:id" element={<Calendario key={window.location.pathname}/>} />
+
+        {/* Fallback: qualunque altra rotta torna alla Home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   );
 }
-
-export default App;

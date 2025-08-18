@@ -1,4 +1,5 @@
-import { useParams, useNavigate } from "react-router-dom";
+
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useTodoFS } from "../hooks/useTodoFS";
@@ -9,29 +10,43 @@ import "../styles/Calendario.css";
 
 export default function CalendarioPage() {
   const { id } = useParams<{ id: string }>();
-  const { user, loading} = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const isOwner = user?.uid === id;
+  const location = useLocation();
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-
   useEffect(() => {
-    if (!id || loading) return;
-                  
-    // Se ora sono loggato e l'URL è "ospite" (o un altro id), portami al mio uid
-    if (user && id !== user.uid) {
-      navigate(`/Calendario/${user.uid}`, { replace: true });
+    if (loading) return;
+
+    const pathNow = location.pathname;
+    const ownerPath = user ? `/Calendario/${user.uid}` : null;
+    const guestPath = `/Calendario/ospite`;
+
+    if (!id) {
+      const target = ownerPath ?? guestPath;
+      if (pathNow !== target) navigate(target, { replace: true });
       return;
     }
 
-    // Se non sono loggato e sto guardando un uid, torna alla modalità ospite
-    if (!user && id !== "ospite") {
-      navigate(`/Calendario/ospite`, { replace: true });
+    if (user) {
+      if (id !== user.uid && pathNow !== ownerPath) {
+        navigate(ownerPath!, { replace: true });
+      }
+    } else {
+      if (id !== "ospite" && pathNow !== guestPath) {
+        navigate(guestPath, { replace: true });
+      }
     }
-  }, [id, user?.uid, loading, navigate]);
+  }, [id, user?.uid, loading, location.pathname, navigate]);
 
-  /* -------- hook dati (Firestore o LocalStorage) ------- */
+  if (loading || !id || (user && id !== user.uid) || (!user && id !== "ospite")) {
+    return <div className="calendario-page">Caricamento...</div>;
+  }
+
+  const effectiveId = id;
+  const isOwner = !!user && effectiveId === user.uid;
+
   const {
     todos,
     addTodo,
@@ -39,11 +54,12 @@ export default function CalendarioPage() {
     toggleTodo,
     deleteTodo,
     getTodosByHour,
-  } = isOwner ? useTodoFS(id!, selectedDate) : useTodoLocal(id!, selectedDate);
+  } = isOwner
+    ? useTodoFS(effectiveId, selectedDate)
+    : useTodoLocal(effectiveId, selectedDate);
 
   return (
     <div className="calendario-page">
-
       {!isOwner && (
         <p className="guest-banner">
           Modalità ospite — i dati restano su questo dispositivo.
@@ -51,18 +67,16 @@ export default function CalendarioPage() {
       )}
 
       <div className="calendar-main">
-
-        {/* Colonna sinistra: dettagli di oggi */}
         <div className="container-left">
           <div className="calendar-giorno-corrente">
-
-            <h2>{selectedDate.toLocaleDateString("it-IT", {
+            <h2>
+              {selectedDate.toLocaleDateString("it-IT", {
                 weekday: "long",
                 day: "numeric",
                 month: "long",
                 year: "numeric",
               })}
-              </h2>
+            </h2>
 
             <TodayDetails
               selectedDate={selectedDate}
@@ -75,7 +89,6 @@ export default function CalendarioPage() {
           </div>
         </div>
 
-        {/* Colonna destra: griglia mese/settimana */}
         <div className="calendar-mese-corrente">
           <CalendarGrid
             todos={todos}

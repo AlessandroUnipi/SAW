@@ -10,7 +10,7 @@ interface DayCellProps {
 
 const DayCell: React.FC<DayCellProps> = ({ date, isExpanded, selectedKey, onSelectDay }) => {
   const isSelected = dayKeyOf(date) === selectedKey;
-  const isToday    = dayKeyOf(date) === dayKeyOf(new Date()); // 👈 oggi
+  const isToday    = dayKeyOf(date) === dayKeyOf(new Date());
 
   return (
     <div

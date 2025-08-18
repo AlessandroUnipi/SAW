@@ -8,74 +8,86 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import "../styles/Login.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface Props {
   onClose: () => void;
 }
 
-export default function LoginModal ({onClose}: Props) {
-  const [mode, setMode] = useState<"login" | "signup">("login")
+export default function LoginModal({ onClose }: Props) {
+  const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const auth = getAuth();
 
   const doNavigate = () => {
-    const uid = auth.currentUser?.uid;
-    if (uid) navigate(`/Calendario/${uid}`, { replace: true });
-  };
+  const uid = auth.currentUser?.uid;
+  if (uid && pathname !== `/Calendario/${uid}`) {
+    navigate(`/Calendario/${uid}`, { replace: true });
+  }
+};
+
 
   const handleSignup = async () => {
     setLoading(true);
-    setError (null);
+    setError(null);
 
     try {
-      if (mode == "login"){
+      if (mode === "login") {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
-      };
+      }
 
-      onClose(); // Chiudo il popup
-      doNavigate();
+      const uid = auth.currentUser?.uid;
+      if (uid) {
+        navigate(`/Calendario/${uid}`, { replace: true });
+      }
+
+      onClose(); // chiudi la modale
     } catch (e: any) {
       setError(e.message);
     } finally {
       setLoading(false);
-    };
+    }
   };
 
-
-  const googleLogin = async() => {
+  const googleLogin = async () => {
     try {
       await signInWithPopup(auth, new GoogleAuthProvider());
+      
+      const uid = auth.currentUser?.uid;
+      if (uid) {
+        navigate(`/Calendario/${uid}`, { replace: true });
+      }
+
       onClose();
-      doNavigate();
-    } catch (e: any){
+    } catch (e: any) {
       setError(e.message);
     }
   };
 
   return createPortal(
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal" onClick = {e => e.stopPropagation()}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
         <h2>{mode === "login" ? "Accedi" : "Crea account"}</h2>
 
-        <input 
+        <input
           type="email"
           placeholder="Email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
-          type = "password"
+          type="password"
           placeholder="Password"
-          value = {password}
-          onChange={e => setPassword(e.target.value)}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         {error && <p className="error">{error}</p>}
@@ -89,13 +101,11 @@ export default function LoginModal ({onClose}: Props) {
         <p className="switch">
           {mode === "login" ? (
             <>
-              Non hai un Account?{" "}
-              <span onClick={() => setMode("signup")}>Registrati</span>
-              </>
+              Non hai un Account? <span onClick={() => setMode("signup")}>Registrati</span>
+            </>
           ) : (
             <>
-              Hai gia un Account?{" "}
-              <span onClick={() => setMode("login")}>Accedi</span>
+              Hai già un Account? <span onClick={() => setMode("login")}>Accedi</span>
             </>
           )}
         </p>
@@ -107,7 +117,4 @@ export default function LoginModal ({onClose}: Props) {
     </div>,
     document.body
   );
-
-
 }
-

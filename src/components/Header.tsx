@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation, replace } from "react-router-dom";
 import '../styles/Header.css'; // Stili CSS per l'header
 import LoginModal from "./Login"
 import { useAuth } from "../hooks/useAuth"
@@ -17,17 +17,13 @@ export default function Header () {
 
   const calendarHref = user ? `/Calendario/${user.uid}` : "/Calendario/ospite";
 
-
   const handleLogout = async () => {
     try {
-      
       await logout();
-      if (pathname.startsWith("/Calendario")) {
-        navigate("/Calendario/ospite", { replace: true });
-      }
-
     }catch (err){
       console.error("Logout Error:", err);
+    }finally{
+        navigate("/", {replace:true})
     }
   }
 
@@ -58,7 +54,9 @@ export default function Header () {
       <div className="header-container">
         {/* Logo */}
         <div className="logo-container">
-          <img src="/src/assets/Logo.jpeg" alt="Logo" className="logo" />
+          <Link to="/" className="logo" aria-label="Vai alla Home">
+            <img src="/src/assets/Logo.jpeg" alt="" className="logo" />
+          </Link>
         </div>
         
         {/* Pulsanti */}
