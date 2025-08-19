@@ -3,6 +3,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../styles/Header.css";
 import LoginModal from "./Login";
 import { useAuth } from "../hooks/useAuth";
+import { useFcm } from "../hooks/useFcm";
+const VAPID = import.meta.env.VITE_VAPID_KEY as string;
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,6 +13,7 @@ export default function Header() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { token, permission, enable, disable } = useFcm(VAPID);
 
   const calendarHref = user ? `/Calendario/${user.uid}` : "/Calendario/ospite";
 
@@ -55,7 +58,7 @@ export default function Header() {
       <div className="header-container">
         <div className="logo-container">
           <Link to="/" className="logo" aria-label="Vai alla Home">
-            <img src="/src/assets/Logo.jpeg" alt="" className="logo" />
+            <img src="/src/assets/Calendar.png" alt="" className="logo" />
           </Link>
         </div>
 
@@ -92,6 +95,15 @@ export default function Header() {
           ) : (
             <button className="menu-button-item" onClick={() => { setIsMenuOpen(false); setOpenLogin(true); }}>
               Accedi
+            </button>
+          )}
+          {user && (
+            <button
+              className="btn secondary"
+              onClick={() => (token ? disable() : enable())}
+              title={permission !== "granted" ? "Richiede permesso" : ""}
+            >
+              {token ? "🔕 Disattiva notifiche" : "🔔 Attiva notifiche"}
             </button>
           )}
         </div>
