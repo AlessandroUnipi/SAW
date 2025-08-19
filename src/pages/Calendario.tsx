@@ -1,11 +1,8 @@
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { useTodoFS } from "../hooks/useTodoFS";
-import { useTodoLocal } from "../hooks/useTodoLocal";
-import CalendarGrid from "../components/CalendarGrid";
-import TodayDetails from "../components/TodayDetails";
+import { FirestoreCalendario } from "./FirestoreCalendario";
+import { LocalCalendario } from "./LocalCalendario";
 import "../styles/Calendario.css";
 
 export default function CalendarioPage() {
@@ -14,89 +11,38 @@ export default function CalendarioPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-
   useEffect(() => {
     if (loading) return;
 
-    const pathNow = location.pathname;
-    const ownerPath = user ? `/Calendario/${user.uid}` : null;
-    const guestPath = `/Calendario/ospite`;
-
     if (!id) {
-      const target = ownerPath ?? guestPath;
-      if (pathNow !== target) navigate(target, { replace: true });
+      if (user) {
+        navigate(`/Calendario/${user.uid}`, { replace: true });
+      } else {
+        navigate("/", { replace: true });             // ← Home quando sloggato
+      }
       return;
     }
 
     if (user) {
-      if (id !== user.uid && pathNow !== ownerPath) {
-        navigate(ownerPath!, { replace: true });
-      }
-    } else {
-      if (id !== "ospite" && pathNow !== guestPath) {
-        navigate(guestPath, { replace: true });
-      }
+      if (id !== user.uid) navigate(`/Calendario/${user.uid}`, { replace: true });
+      return;
     }
-  }, [id, user?.uid, loading, location.pathname, navigate]);
 
-  if (loading || !id || (user && id !== user.uid) || (!user && id !== "ospite")) {
-    return <div className="calendario-page">Caricamento...</div>;
+    // utente NON loggato
+    if (id !== "ospite") {
+      navigate("/", { replace: true });               // ← niente più salto a /Calendario/ospite
+    }
+  }, [id, user, loading, navigate]);
+
+  if (loading) return <div className="calendario-page">Caricamento...</div>;
+  if (!id)     return <div className="calendario-page">Path non valido</div>;
+
+  // Monta un SOLO ramo → niente problemi coi hook
+  if (user && id === user.uid) {
+    return <FirestoreCalendario id={id!} />;
   }
-
-  const effectiveId = id;
-  const isOwner = !!user && effectiveId === user.uid;
-
-  const {
-    todos,
-    addTodo,
-    updateTodo,
-    toggleTodo,
-    deleteTodo,
-    getTodosByHour,
-  } = isOwner
-    ? useTodoFS(effectiveId, selectedDate)
-    : useTodoLocal(effectiveId, selectedDate);
-
-  return (
-    <div className="calendario-page">
-      {!isOwner && (
-        <p className="guest-banner">
-          Modalità ospite — i dati restano su questo dispositivo.
-        </p>
-      )}
-
-      <div className="calendar-main">
-        <div className="container-left">
-          <div className="calendar-giorno-corrente">
-            <h2>
-              {selectedDate.toLocaleDateString("it-IT", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </h2>
-
-            <TodayDetails
-              selectedDate={selectedDate}
-              getTodosByHour={getTodosByHour}
-              addTodo={addTodo}
-              updateTodo={updateTodo}
-              toggleTodo={toggleTodo}
-              deleteTodo={deleteTodo}
-            />
-          </div>
-        </div>
-
-        <div className="calendar-mese-corrente">
-          <CalendarGrid
-            todos={todos}
-            selectedDate={selectedDate}
-            onSelectDay={setSelectedDate}
-          />
-        </div>
-      </div>
-    </div>
-  );
+  if (!user && id === "ospite") {
+    return <LocalCalendario id={id!} />;
+  }
+  return <div className="calendario-page">Path non valido</div>;
 }

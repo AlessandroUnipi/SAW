@@ -18,17 +18,6 @@ import { Todo, TodoApi, dayKeyOf, monthKeyOf } from "./ToDo";
 export const useTodoFS = (uid: string, date: Date): TodoApi => {
   const [todos, setTodos] = useState<Todo[]>([]);
 
-  if (!uid) {
-    return {
-      todos,
-      addTodo: async () => {},
-      toggleTodo: async () => {},
-      deleteTodo: async () => {},
-      updateTodo: async () => {},
-      getTodosByHour: () => [],
-    };
-  }
-
   useEffect(() => {
     const key = dayKeyOf(date);
     const ref = collection(db, "users", uid, "todos");
@@ -46,6 +35,18 @@ export const useTodoFS = (uid: string, date: Date): TodoApi => {
     );
     return unsub;
   }, [uid, date]);
+
+  
+  if (!uid) {
+    return {
+      todos,
+      addTodo: async () => {},
+      toggleTodo: async () => {},
+      deleteTodo: async () => {},
+      updateTodo: async () => {},
+      getTodosByHour: () => [],
+    };
+  }
 
   const addTodo = useCallback(
     async (hour: number, text: string) => {
