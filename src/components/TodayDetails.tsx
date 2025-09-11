@@ -1,6 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 import { Todo, dayKeyOf } from "../hooks/ToDo";
 import "../styles/TodayDetails.css";
+import { useNotificationScheduler } from "../hooks/useNotificationScheduler";
+
 
 type Props = {
   selectedDate: Date;
@@ -25,7 +27,7 @@ export default function TodayDetails({
   const inputRefs = useRef<Record<number, HTMLInputElement | null>>({});
   const selectedKey = dayKeyOf(selectedDate);
 
-  // opzionale: quando cambio giorno, esco dall'editing
+  // quando cambio giorno, esco dall'editing
   useEffect(() => {
     setEditingHour(null);
   }, [selectedKey]);
@@ -62,6 +64,12 @@ export default function TodayDetails({
       el.blur();
     }
   };
+
+  const todosForDay = Array.from({ length: 24 }, (_, h) => getTodosByHour(h)[0])
+  .filter((todo): todo is Todo => !!todo); // cast tipo intelligente
+
+  useNotificationScheduler(todosForDay, selectedDate);
+
 
   return (
     <div className="today-details">

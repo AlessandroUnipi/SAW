@@ -16,12 +16,13 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
   const n = payload.notification || {};
+  const tag = payload?.data?.tag;
   self.registration.showNotification(n.title || "Notifica", {
     body: n.body || "",
     icon: n.icon || "/icons/icon-192.png",
     data: payload.fcmOptions || {},
-    tag: payload?.data?.tag || undefined, // utile per “collassare”
-    renotify: true,
+    tag, 
+    renotify: tag || undefined,
   });
 });
 

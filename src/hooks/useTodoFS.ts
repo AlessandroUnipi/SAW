@@ -82,11 +82,19 @@ export const useTodoFS = (uid: string, date: Date): TodoApi => {
       try {
         const tgt = todos.find((t) => t.id === id);
         if (!tgt) return;
+
+        const newCompleted = !tgt.completed;
+
+        // 1. Aggiorna su Firestore
         await updateDoc(doc(db, "users", uid, "todos", id), {
-          completed: !tgt.completed,
+          completed: newCompleted,
         });
+
+        // 2. Aggiorna localmente lo stato per feedback immediato
         setTodos((prev) =>
-          prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+          prev.map((t) =>
+            t.id === id ? { ...t, completed: newCompleted } : t
+          )
         );
       } catch (err) {
         console.error("Firestore toggleTodo error:", err);
@@ -94,6 +102,7 @@ export const useTodoFS = (uid: string, date: Date): TodoApi => {
     },
     [uid, todos]
   );
+
 
   const deleteTodo = async (id: string) => {
     try {
