@@ -7,12 +7,16 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies & build
 node_modules
 dist
 dist-ssr
-*.local
 
-# Editor directories and files
+# Local env files 
+.env
+.env.local
+
+
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -22,3 +26,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Optional: macOS & Linux trash
+.Trash-*
+
