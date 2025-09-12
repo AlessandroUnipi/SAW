@@ -1,40 +1,29 @@
-SAW Boghiu Alexandru 654734
+# SAW Boghiu Alexandru 654734
 Calendario PWA – React + TypeScript + Firebase
 
 Progetto d’esame per Applicazioni Web (SAW) – Università di Pisa.
 Web App installabile come PWA, con autenticazione utenti, gestione ToDo e notifiche push.
 
-Funzionalità:
-
-Vista Calendario mensile + dettaglio giornaliero con ToDo.
-
-Operazioni CRUD: aggiunta, modifica, completamento/non completamento, eliminazione.
-
-Autenticazione utenti con Firebase Authentication (Email/Password e/o Google).
-
-Notifiche push: inviate 10 minuti prima del ToDo (via Firebase Cloud Messaging).
-
-Offline support: cache asset e pagina di fallback.
-
-Installabile come PWA.
+## Funzionalità:
+- Vista Calendario mensile + dettaglio giornaliero con ToDo.
+- Operazioni CRUD: aggiunta, modifica, completamento/non completamento, eliminazione.
+- Autenticazione utenti con Firebase Authentication (Email/Password e/o Google).
+- Notifiche push: inviate 10 minuti prima del ToDo (via Firebase Cloud Messaging).
+- Offline support: cache asset e pagina di fallback.
+- Installabile come PWA.
 
 
-Stack Tecnico:
+## Stack Tecnico:
 
 React 18, TypeScript, Vite
-
 Firebase: Authentication, Firestore, Cloud Messaging
-
 Service Worker per cache e notifiche
-
 CSS per lo stile
 
 
-Istruzioni per l’avvio:
+## Istruzioni per l’avvio:
 1. Prerequisiti
-
 Node.js versione >= 18
-
 npm installato
 
 2. Clonare il repository
@@ -45,21 +34,18 @@ cd SAW
 npm install
 
 4. File di configurazione .env
-
 Per avviare l’app è necessario il file .env (allegato insieme alla consegna).
 
 5. Avvio in modalità sviluppo
 npm run dev
 
-🧪 Credenziali di test
-
+## Credenziali di test
 Per accedere, utilizzare le credenziali di test fornite:
-
 Email: utente1@gmail.com
 Password: a12345
 
 
-Firestore – Modello dati
+## Firestore – Modello dati
 /users/{userId}/todos/{todoId}
   - text: string        # descrizione attività
   - completed: boolean  # stato completamento
@@ -71,7 +57,7 @@ Firestore – Modello dati
   - updatedAt: timestamp
 
 
-Repository
+## Repository
 
 👉 https://github.com/AlessandroUnipi/SAW
 
