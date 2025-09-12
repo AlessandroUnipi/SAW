@@ -27,6 +27,5 @@ dist-ssr
 *.sln
 *.sw?
 
-# Optional: macOS & Linux trash
 .Trash-*
 

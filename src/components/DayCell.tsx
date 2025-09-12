@@ -1,4 +1,3 @@
-// src/components/DayCell.tsx
 import { dayKeyOf } from "../hooks/ToDo";
 
 interface DayCellProps {

@@ -1,7 +1,5 @@
-// firebaseConfig.ts
 import { initializeApp } from "firebase/app";
 import {
-  getFirestore,
   initializeFirestore,
   persistentLocalCache,
   persistentMultipleTabManager,

@@ -1,5 +1,1 @@
-/* DayCell: spostiamo tutta la logica di layout in CalendarGrid.css */
-.day-cell { /* aspetti di base già definiti in CalendarGrid.css */ }
 .day-number { font-weight: 600; }
-
-/* mantieni solo eventuali personalizzazioni non di layout qui */

@@ -1,6 +1,3 @@
-/* ===== CALENDARIO – LAYOUT A DUE COLONNE, SCROLL SOLO INTERNO ===== */
-
-/* Regola l’altezza dell’header se necessario */
 :root { --header-h: 64px; }
 
 .calendario-page {
@@ -10,7 +7,6 @@
   padding: 0 12px 12px;
 }
 
-/* Banner ospite (opzionale) */
 .guest-banner {
   margin: 8px 0 12px;
   padding: 8px 12px;
@@ -25,14 +21,13 @@
   display: grid;
   grid-template-columns: 1.1fr 1.9fr; /* sx : dx */
   gap: 16px;
-  height: calc(100vh - var(--header-h) - 24px); /* evita scroll della pagina */
-  align-items: stretch; /* allunga entrambi i pannelli */
+  height: calc(100vh - var(--header-h) - 24px); 
+  align-items: stretch; 
 }
 
 .container-left,
 .calendar-mese-corrente { height: 100%; }
 
-/* Card/pannelli */
 .calendar-giorno-corrente,
 .calendar-mese-corrente {
   background: #fff;
@@ -61,10 +56,9 @@
 .calendar-mese-corrente .calendar-header { flex: 0 0 auto; }
 .calendar-mese-corrente .calendar-grid {
   flex: 1 1 auto;
-  overflow: auto; /* scorre la griglia, non il pannello */
+  overflow: auto; 
 }
 
-/* breakpoint (facoltativo) */
 @media (max-width: 1100px) {
   .calendar-main { grid-template-columns: 1fr 1fr; }
 }

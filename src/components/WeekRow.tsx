@@ -1,10 +1,9 @@
-// src/components/WeekRow.tsx
 import DayCell from "./DayCell";
 
 interface WeekRowProps {
   week: Date[];
   selectedKey: string;
-  isExpanded: boolean;                 // 👈 nuovo
+  isExpanded: boolean;                 
   onSelectDay?: (date: Date) => void;
 }
 

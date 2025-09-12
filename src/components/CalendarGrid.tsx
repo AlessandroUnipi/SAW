@@ -1,4 +1,3 @@
-// src/components/CalendarGrid.tsx
 import WeekRow from "./WeekRow";
 import "../styles/CalendarGrid.css";
 import { startOfMonth, endOfMonth, startOfWeek, addDays } from "date-fns";

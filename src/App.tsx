@@ -1,4 +1,3 @@
-// src/App.tsx
 import "./styles/App.css";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";

@@ -40,16 +40,14 @@ export default function TodayDetails({
   const handleKeyUp = (hour: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     const el = e.currentTarget;
     const text = (el.value || "").trim();
-    const existing = getTodosByHour(hour)[0]; // un solo todo per ora
+    const existing = getTodosByHour(hour)[0]; 
 
     if (e.key === "Enter") {
       if (!text) {
         return;
       } else if (existing) {
-        // modifica
         updateTodo({ ...existing, text });
       } else {
-        // nuovo
         addTodo(hour, text);
       }
       setEditingHour(null);
@@ -58,7 +56,6 @@ export default function TodayDetails({
     }
 
     if (e.key === "Escape") {
-      // ripristina testo precedente (o vuoto) e esci
       el.value = existing?.text ?? "";
       setEditingHour(null);
       el.blur();
@@ -66,7 +63,7 @@ export default function TodayDetails({
   };
 
   const todosForDay = Array.from({ length: 24 }, (_, h) => getTodosByHour(h)[0])
-  .filter((todo): todo is Todo => !!todo); // cast tipo intelligente
+  .filter((todo): todo is Todo => !!todo); 
 
   useNotificationScheduler(todosForDay, selectedDate);
 

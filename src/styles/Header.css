@@ -1,14 +1,9 @@
-/* ===========================
-   Header.css (completo)
-   =========================== */
-
-/* HEADER BASE */
 .header {
   position: fixed;
   top: 0; left: 0;
   width: 100%;
   height: 64px;
-  background: #111827;            /* grigio scuro */
+  background: #111827;            
   border-bottom: 1px solid #0b1220;
   z-index: 1000;
 }
@@ -30,7 +25,7 @@
 
 /* Bottoni primari/varianti  */
 .btn,
-.login-button {                               /* alias per compatibilità */
+.login-button {                            
   display: inline-flex; align-items: center; justify-content: center;
   gap: .35rem;
   padding: 8px 14px;
@@ -38,7 +33,7 @@
   font-size: .875rem;
   border: 1px solid transparent;
   color: #fff;
-  background: #2563eb;                       /* blu */
+  background: #2563eb;                       
   cursor: pointer;
   text-decoration: none;
   transition: background .15s ease, color .15s ease, border-color .15s ease;
@@ -59,7 +54,6 @@
 }
 .btn.outline:hover { background: rgba(255,255,255,.08); }
 
-/* HAMBURGER (se usi il menu mobile) */
 .mobile-menu-button {
   display: inline-flex; align-items: center; justify-content: center;
   padding: 6px 10px;
@@ -72,27 +66,14 @@
 .mobile-menu-button:hover { background: #1f2937; }
 .menu-icon { width: 24px; height: 24px; }
 
-/* BACKDROP (DISATTIVATO DI DEFAULT: niente overlay grigio) */
 .menu-backdrop { display: none; }
 
-/* Se vuoi mostrarlo SOLO su schermi piccoli, attiva questo blocco:
-@media (max-width: 768px) {
-  .menu-backdrop {
-    display: block;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.35);
-    z-index: 990;
-  }
-}
-*/
-
-/* MENU POPUP (mobile/compact) */
 .menu-popup {
   position: absolute;
   top: 66px;
   right: 8px;
-  width: 260px;                 /* un filo più largo */
-  padding: 8px;                 /* padding uniforme */
+  width: 260px;                 
+  padding: 8px;                 
   background: #ffffff;
   color: #111827;
   border: 1px solid #e5e7eb;
@@ -102,7 +83,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow: hidden;             /* ← impedisce lo “sbordo” visivo */
+  overflow: hidden;             
   animation: menuSlideDown .2s ease-out;
 }
 
@@ -112,32 +93,31 @@
 }
 
 .menu-button-item {
-  display: flex;                /* dimensione identica per a e button */
+  display: flex;                
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 40px;                 /* stessa altezza per tutte */
+  height: 40px;                
   padding: 0 12px;
   margin: 0;
   border: 0;
   border-radius: 8px;
   background: #2563eb;
   color: #fff;
-  text-decoration: none;        /* per <a> */
+  text-decoration: none;       
   font: inherit;
   cursor: pointer;
-  line-height: 1;               /* evita salti verticali */
-  -webkit-appearance: none;     /* per Safari/iOS */
+  line-height: 1;               
+  -webkit-appearance: none;     
   appearance: none;
 }
 .menu-button-item:hover { background: #1d4ed8; }
 
-/* ACCESSIBILITÀ */
 .btn:focus-visible,
 .login-button:focus-visible,
 .mobile-menu-button:focus-visible,
 .menu-button-item:focus-visible {
-  outline: 2px solid #93c5fd;   /* azzurrino */
+  outline: 2px solid #93c5fd;   
   outline-offset: 2px;
 }
 

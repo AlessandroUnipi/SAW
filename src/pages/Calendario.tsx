@@ -9,7 +9,6 @@ export default function CalendarioPage() {
   const { id } = useParams<{ id: string }>();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     if (loading) return;

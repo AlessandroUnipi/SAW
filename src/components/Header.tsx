@@ -23,7 +23,6 @@ export default function Header() {
       setIsMenuOpen(false);
       setOpenLogin(false);
 
-      // evita “rincorsa” con l’effetto di CalendarioPage
       if (pathname.startsWith("/Calendario")) {
         navigate("/", { replace: true });
       }
@@ -103,7 +102,7 @@ export default function Header() {
               onClick={() => (token ? disable() : enable())}
               title={permission !== "granted" ? "Richiede permesso" : ""}
             >
-              {token ? "🔕 Disattiva notifiche" : "🔔 Attiva notifiche"}
+              {token ? "Disattiva notifiche" : "Attiva notifiche"}
             </button>
           )}
         </div>
