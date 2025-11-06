@@ -21,10 +21,6 @@ export function LocalCalendario({ id }: LocalCalendarioProps) {
 
   return (
     <div className="calendario-page">
-      <p className="guest-banner">
-        Modalità ospite — i dati restano su questo dispositivo.
-      </p>
-
       <div className="calendar-main">
         <div className="container-left">
           <div className="calendar-giorno-corrente">

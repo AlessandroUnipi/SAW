@@ -6,14 +6,25 @@ import { useAuth } from "../hooks/useAuth";
 import { useFcm } from "../hooks/useFcm";
 const VAPID = import.meta.env.VITE_VAPID_KEY as string;
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{
+    outcome: "accepted" | "dismissed";
+    platform: string;
+  }>;
+}
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
+  const [isVisible, setIsVisible] = useState(false); //Mostrare o meno il pulsante "Installa"
+  const [installPrompt, setInstallPrompt] = useState <BeforeInstallPromptEvent  | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { token, permission, enable, disable } = useFcm(VAPID);
+
 
   const calendarHref = user ? `/Calendario/${user.uid}` : "/Calendario/ospite";
 
@@ -33,6 +44,33 @@ export default function Header() {
       navigate("/", { replace: true });
     }
   };
+
+  useEffect(()=> {
+    const handler = (e: any) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+      setIsVisible(true);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  const handleInstall = async () => {
+    if(!installPrompt)return;
+
+    installPrompt.prompt();
+
+    const {outcome} = await installPrompt.userChoice;
+
+    if(outcome === "accepted"){
+      console.log("installazione Accettata");
+    }else{
+      console.log("Installazione Rifiutata")
+    }
+
+    setInstallPrompt(null);
+    setIsVisible(false);
+  }
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -61,7 +99,13 @@ export default function Header() {
           </Link>
         </div>
 
+
         <div className="header-buttons">
+
+          {isVisible &&(
+            <button onClick={handleInstall} className="install-btn">Installa</button>
+          )}
+        
           {user ? (
             <>
               <span className="user">{user.email}</span>

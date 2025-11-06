@@ -5,11 +5,8 @@ import CalendarGrid from "../components/CalendarGrid";
 import TodayDetails from "../components/TodayDetails";
 import "../styles/Calendario.css";
 
-interface FirestoreCalendarioProps {
-  id: string; // route id, non per forza usato
-}
 
-export function FirestoreCalendario({ id }: FirestoreCalendarioProps) {
+export function FirestoreCalendario() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const { user } = useAuth();
 

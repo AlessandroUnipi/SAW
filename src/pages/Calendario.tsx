@@ -38,7 +38,7 @@ export default function CalendarioPage() {
 
   // Monta un SOLO ramo → niente problemi coi hook
   if (user && id === user.uid) {
-    return <FirestoreCalendario id={id!} />;
+    return <FirestoreCalendario />;
   }
   if (!user && id === "ospite") {
     return <LocalCalendario id={id!} />;

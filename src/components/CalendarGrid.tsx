@@ -1,7 +1,10 @@
 import WeekRow from "./WeekRow";
 import "../styles/CalendarGrid.css";
-import { startOfMonth, endOfMonth, startOfWeek, addDays } from "date-fns";
+import { startOfMonth, endOfMonth, startOfWeek, addDays, subMonths, addMonths} from "date-fns";
 import { Todo, dayKeyOf } from "../hooks/ToDo";
+import arrowLeft from "../assets/icons8-sinistra-squadrato-24.png";
+import arrowRight from "../assets/icons8-destra-squadrato-24.png";
+
 
 interface Props {
   todos: Todo[];                 
@@ -17,7 +20,6 @@ export default function CalendarGrid({ todos, selectedDate, onSelectDay }: Props
   const monthEnd   = endOfMonth(monthStart);
   const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 });
 
-  const daysOfWeek = ["LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM"];
   const monthLabel = base.toLocaleString("it-IT", { month: "long", year: "numeric" });
 
   // costruisci settimane
@@ -28,22 +30,27 @@ export default function CalendarGrid({ todos, selectedDate, onSelectDay }: Props
 
   const selectedKey = dayKeyOf(selectedDate);
   const selectedWeekStart = startOfWeek(selectedDate, { weekStartsOn: 1 }).getTime();
+  const prevMonth = () => onSelectDay?.(subMonths(base, 1));
+  const nextMonth = () => onSelectDay?.(addMonths(base, 1));
 
   return (
     <>
       <div className="calendar-header">
-        <h2>{monthLabel}</h2>
-        <div className="days-of-week">
-          {daysOfWeek.map((d, i) => (
-            <div key={i} className="day-header">{d}</div>
-          ))}
-        </div>
+        <button className="month-btn" onClick={prevMonth}>
+          <img src={arrowLeft} alt="Mese precedente" />
+        </button>
+
+        <h2 className="month-label">{monthLabel}</h2>
+
+        <button className="month-btn" onClick={nextMonth}>
+          <img src={arrowRight} alt="Mese successivo" />
+        </button>
       </div>
 
       <div className="calendar-grid">
         {weeks.map((week, i) => {
           const weekStartTs = startOfWeek(week[0], { weekStartsOn: 1 }).getTime();
-          const isExpanded = weekStartTs === selectedWeekStart;   // 👈 settimana della data selezionata
+          const isExpanded = weekStartTs === selectedWeekStart;   // settimana della data selezionata
           return (
             <WeekRow
               key={i}
@@ -51,6 +58,7 @@ export default function CalendarGrid({ todos, selectedDate, onSelectDay }: Props
               selectedKey={selectedKey}
               isExpanded={isExpanded}
               onSelectDay={onSelectDay}
+              todos={todos}
             />
           );
         })}

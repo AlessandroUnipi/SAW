@@ -4,7 +4,8 @@
   min-height: calc(100vh - var(--header-h));
   display: flex;
   flex-direction: column;
-  padding: 0 12px 12px;
+  padding:  12px 12px;  /*70px 12px 12px*/
+  padding-top: calc(var(--header-h) + 6px);
 }
 
 .guest-banner {
@@ -22,7 +23,7 @@
   grid-template-columns: 1.1fr 1.9fr; /* sx : dx */
   gap: 16px;
   height: calc(100vh - var(--header-h) - 24px); 
-  align-items: stretch; 
+  align-items: stretch;
 }
 
 .container-left,
