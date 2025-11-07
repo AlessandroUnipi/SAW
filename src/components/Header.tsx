@@ -24,14 +24,13 @@ export default function Header() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { token, permission, enable, disable } = useFcm(VAPID);
-  const [display, setDisplay] = useState <"browser" | "standalone">("browser");
+  //const [display, setDisplay] = useState <"browser" | "standalone">("browser");
 
 
   const calendarHref = user ? `/Calendario/${user.uid}` : "/Calendario/ospite";
 
   const handleLogout = async () => {
     try {
-      // chiudi overlay UI
       setIsMenuOpen(false);
       setOpenLogin(false);
 
@@ -45,7 +44,7 @@ export default function Header() {
       navigate("/", { replace: true });
     }
   };
-
+/*
   useEffect(() => {
   const checkMode = () => {
     if (window.matchMedia("(display-mode: standalone)").matches) {
@@ -61,7 +60,7 @@ export default function Header() {
 
     return () => mq.removeEventListener("change", checkMode);
   }, []);
-
+*/
   useEffect(()=> {
     const handler = (e: any) => {
       e.preventDefault();
@@ -88,7 +87,22 @@ export default function Header() {
     setInstallPrompt(null);
     setIsVisible(false);
   }
-
+/*
+    const handleOpenApp = async () => {
+    if ("getInstalledRelatedApps" in navigator) {
+      const apps = await (navigator as any).getInstalledRelatedApps();
+      if (apps.length > 0) {
+        // Se l'app è installata, aprila direttamente
+        window.location.href = window.location.origin;
+      } else {
+        alert("L'app non risulta installata su questo dispositivo.");
+      }
+    } else {
+      // fallback per browser non compatibili
+      window.location.href = window.location.origin;
+    }
+  };
+*/
   useEffect(() => {
     if (!isMenuOpen) return;
     const onDown = (e: MouseEvent) => {
@@ -118,25 +132,27 @@ export default function Header() {
 
 
         <div className="header-buttons">
-
-        {display === "browser" && (
-          <>
+        
+        {/*</div>{display === "browser" && (
+          <>*/}
             {isVisible && (
               <button onClick={handleInstall} className="install-btn">
                 Installa
               </button>
             )}
-
+          {/*
             {!isVisible && (
               <button
-                onClick={() => window.location.href = "web+calendar://open"}
+                onClick={handleOpenApp}
                 className="open-app-btn"
               >
                 Apri in App
               </button>
             )}
           </>
-        )}{user ? (
+        )*/}
+        
+          {user ? (
             <>
               <span className="user">{user.email}</span>
               <button onClick={handleLogout} className="btn secondary">Logout →</button>
