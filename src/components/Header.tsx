@@ -17,13 +17,14 @@ interface BeforeInstallPromptEvent extends Event {
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
-  const [isVisible, setIsVisible] = useState(false); //Mostrare o meno il pulsante "Installa"
+  const [isVisible, setIsVisible] = useState(false); 
   const [installPrompt, setInstallPrompt] = useState <BeforeInstallPromptEvent  | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { token, permission, enable, disable } = useFcm(VAPID);
+  const [display, setDisplay] = useState <"browser" | "standalone">("browser");
 
 
   const calendarHref = user ? `/Calendario/${user.uid}` : "/Calendario/ospite";
@@ -44,6 +45,22 @@ export default function Header() {
       navigate("/", { replace: true });
     }
   };
+
+  useEffect(() => {
+  const checkMode = () => {
+    if (window.matchMedia("(display-mode: standalone)").matches) {
+      setDisplay("standalone");
+    } else {
+      setDisplay("browser");
+    }
+  };
+
+    checkMode();
+    const mq = window.matchMedia("(display-mode: standalone)");
+    mq.addEventListener("change", checkMode);
+
+    return () => mq.removeEventListener("change", checkMode);
+  }, []);
 
   useEffect(()=> {
     const handler = (e: any) => {
@@ -102,11 +119,24 @@ export default function Header() {
 
         <div className="header-buttons">
 
-          {isVisible &&(
-            <button onClick={handleInstall} className="install-btn">Installa</button>
-          )}
-        
-          {user ? (
+        {display === "browser" && (
+          <>
+            {isVisible && (
+              <button onClick={handleInstall} className="install-btn">
+                Installa
+              </button>
+            )}
+
+            {!isVisible && (
+              <button
+                onClick={() => window.location.href = "web+calendar://open"}
+                className="open-app-btn"
+              >
+                Apri in App
+              </button>
+            )}
+          </>
+        )}{user ? (
             <>
               <span className="user">{user.email}</span>
               <button onClick={handleLogout} className="btn secondary">Logout →</button>

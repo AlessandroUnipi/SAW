@@ -69,3 +69,9 @@
   font-size: 1.2rem;
   padding: 2rem;
 }
+
+.day-todo-item.completed {
+  text-decoration: line-through;
+  color: #831e1e;
+  opacity: 0.7;
+}

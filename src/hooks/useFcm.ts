@@ -36,6 +36,32 @@ export function useFcm(vapidKey: string) {
     });
   }, []);
 
+  useEffect(() => {
+  async function restoreToken() {
+    if (Notification.permission === "granted") {
+      const tok = await requestFcmToken(vapidKey);
+      if (tok) {
+        setToken(tok);
+        setPermission("granted");
+
+        const data = {
+          createdAt: serverTimestamp(),
+          ua: navigator.userAgent,
+        };
+
+        if (user) {
+          await setDoc(doc(db, `users/${user.uid}/fcmTokens/${tok}`), data);
+        } else {
+          await setDoc(doc(db, `guests/${tok}`), data);
+        }
+      }
+    }
+  }
+
+  restoreToken();
+}, [user, vapidKey]);
+
+
   // Log del token appena disponibile
   useEffect(() => {
     if (token) {

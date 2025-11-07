@@ -9,6 +9,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/icons/favicon.ico" sizes="any">
     <title>Calendar</title>
+     <script>
+      if ("registerProtocolHandler" in navigator) {
+        navigator.registerProtocolHandler(
+          "web+calendar",
+          `${window.location.origin}/?url=%s`,
+          "SAW Calendar"
+        );
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

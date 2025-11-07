@@ -19,7 +19,7 @@ const DayCell: React.FC<DayCellProps> = ({
   const dayKey = dayKeyOf(date);
   const isSelected = dayKey === selectedKey;
   const isToday = dayKey === dayKeyOf(new Date());
-  const dayTodos = todos.filter((t) => t.dayKey === dayKey);
+  const dayTodos = todos.filter((t) => t.dayKey === dayKey).sort((a, b) => a.hour - b.hour);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const [hasOverflow, setHasOverflow] = useState(false);
@@ -52,7 +52,7 @@ const DayCell: React.FC<DayCellProps> = ({
         >
           <ul className="day-todo-list">
             {dayTodos.slice(0, 5).map((todo) => (
-              <li key={todo.id} className="day-todo-item">
+              <li key={todo.id} className={`day-todo-item ${todo.completed ? "completed" : ""}`}>
                 • {todo.text}
               </li>
             ))}

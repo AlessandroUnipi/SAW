@@ -58,17 +58,6 @@ export const useTodoFS = (uid: string, date: Date): TodoApi => {
           dayKey: key,
           monthKey: monthKeyOf(date),
         });
-        setTodos((prev) => [
-          ...prev,
-          {
-            id: crypto.randomUUID(),
-            hour,
-            text,
-            completed: false,
-            dayKey: dayKeyOf(date),
-            monthKey: monthKeyOf(date),
-          },
-        ]);
       } catch (err) {
         console.error("Firestore addTodo error:", err);
       }

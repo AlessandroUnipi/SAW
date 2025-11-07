@@ -146,3 +146,18 @@
   transform: translateY(0);
 }
 
+.open-app-btn {
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.open-app-btn:hover {
+  background-color: #1e4ed8;
+  transform: scale(1.05);
+}
