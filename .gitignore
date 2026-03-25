@@ -13,20 +13,28 @@ dist
 dist-ssr
 *.local
 
-# Local env files 
+# Local env files (keep .env.example)
 .env
 .env.local
+.env.*.local
 
+# Firebase
+.firebase/
 
+# Editor
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# OS
 .DS_Store
+Thumbs.db
+.Trash-*
+
+# Misc
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-
-.Trash-*
 

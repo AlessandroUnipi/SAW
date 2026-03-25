@@ -21,7 +21,6 @@ export function useFcm(vapidKey: string) {
   // Mostra notifica quando ricevi in foreground
   useEffect(() => {
     onForegroundMessage(payload => {
-      console.log("[FCM] foreground:", payload);
       const { title, body, icon } = payload.notification || {};
       if (Notification.permission === "granted" && navigator.serviceWorker?.ready) {
         navigator.serviceWorker.ready.then(reg => {
@@ -61,13 +60,6 @@ export function useFcm(vapidKey: string) {
   restoreToken();
 }, [user, vapidKey]);
 
-
-  // Log del token appena disponibile
-  useEffect(() => {
-    if (token) {
-      console.log("[FCM Token]", token);
-    }
-  }, [token]);
 
   const enable = useCallback(async () => {
     const tok = await requestFcmToken(vapidKey);

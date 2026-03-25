@@ -76,13 +76,7 @@ export default function Header() {
 
     installPrompt.prompt();
 
-    const {outcome} = await installPrompt.userChoice;
-
-    if(outcome === "accepted"){
-      console.log("installazione Accettata");
-    }else{
-      console.log("Installazione Rifiutata")
-    }
+    await installPrompt.userChoice;
 
     setInstallPrompt(null);
     setIsVisible(false);

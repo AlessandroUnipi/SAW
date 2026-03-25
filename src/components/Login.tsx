@@ -8,7 +8,7 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import "../styles/Login.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   onClose: () => void;
@@ -22,16 +22,7 @@ export default function LoginModal({ onClose }: Props) {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const { pathname } = useLocation();
   const auth = getAuth();
-
-  const doNavigate = () => {
-  const uid = auth.currentUser?.uid;
-  if (uid && pathname !== `/Calendario/${uid}`) {
-    navigate(`/Calendario/${uid}`, { replace: true });
-  }
-};
-
 
   const handleSignup = async () => {
     setLoading(true);

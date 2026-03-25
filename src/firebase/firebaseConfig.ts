@@ -6,15 +6,15 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
-// Configurazione del progetto
+// Configurazione del progetto (valori letti da .env)
 const firebaseConfig = {
-  apiKey: "AIzaSyCLcvLHmV_7etltYH17qOx0wGqIqIzHsCg",
-  authDomain: "saw2025-bde46.firebaseapp.com",
-  projectId: "saw2025-bde46",
-  storageBucket: "saw2025-bde46.firebasestorage.app",
-  messagingSenderId: "921166745406",
-  appId: "1:921166745406:web:afc07bfb62f1a56669666f",
-  measurementId: "G-17MN2ZMX1X"
+  apiKey: import.meta.env.VITE_FB_API_KEY as string,
+  authDomain: import.meta.env.VITE_FB_AUTH_DOMAIN as string,
+  projectId: import.meta.env.VITE_FB_PROJECT_ID as string,
+  storageBucket: import.meta.env.VITE_FB_STORAGE_BUCKET as string,
+  messagingSenderId: import.meta.env.VITE_FB_MESSAGING_SENDER_ID as string,
+  appId: import.meta.env.VITE_FB_APP_ID as string,
+  measurementId: import.meta.env.VITE_FB_MEASUREMENT_ID as string,
 };
 
 // Inizializza Firebase app

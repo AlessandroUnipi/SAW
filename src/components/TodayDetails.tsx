@@ -23,7 +23,7 @@ export default function TodayDetails({
   toggleTodo,
   deleteTodo,
 }: Props) {
-  const [editingHour, setEditingHour] = useState<number | null>(null);
+  const [_editingHour, setEditingHour] = useState<number | null>(null);
   const inputRefs = useRef<Record<number, HTMLInputElement | null>>({});
   const selectedKey = dayKeyOf(selectedDate);
 
